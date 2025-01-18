@@ -1,0 +1,90 @@
+FUNKCE MAIN
+ˇˇˇˇˇˇˇˇˇˇˇ
+-je to normální funkce, musí něco vracet, automaticky sama returnuje 0
+-tím začíná běh programu
+-nejjednodušší verze bez parametrů
+-dva možné parametry - počet vstupů int argc (velikost pole si překladač nezjistí) a pole stringů char *argv[]
+
+UKAZATELE
+^ˇ^ˇ^ˇ^ˇ^
+-jen zviditelnění situace, která se děje i v ostatních programovacích jazycích
+-prý to není děsivé, ALE JE TO DĚSIVÉ
+-celé bezznaménkové číslo, které říká adresu do paměti
+-ví, na co ukazují, takže očekávají, že na té adrese je ten datový typ, na který ukazují
+* - ukazatel, & - vzití adresy proměnné
+int *pv = &v ...........vezmi adresu v a ulož ji do pv
+- d-reference - unární hvězdička, musí za ní být ukazatel
+*pv = 4 - vloží na místo, kam ukazuje pv, čtyřku
+pv = 4 - vloží do pv čtyřku  
+-můžeme udělat ukazatel na void - překladač neví, na co se ukazuje, můžeme tam přiřazovat libovolný typ ukazatele
+-velikost není fixovaná, je podle architektury počítače
+
+-pointery a pole jsou to samé
+int vals[] = {12,13}; - opravdu se někde sežene paměť té velikosti, nemůžu ten ukazatel už změnit
+int *vals = {12,13}; - vznikne opravdu jen proměnná typu pointer, můžu tam dávat i jiné věci; to pole vznikne, ale není pojmenované, jakmile tam přiřadím jinou hodnotu, pole zmizí
+-pole je ukazatel na začátek pole
+-stringy fungují skoro stejně
+
+-s pointery se dá počítat, ale je to nebezpečné, protože nikdo nekontroluje, jestli už nesaháme někam mimo
+	str[i] je ekvivalentní *(str+i)
+*(str+i) neznamená, že číslo se zvýší o jedna, ale o velikost sizeofu typu, na který se ukazuje, takže třeba u int 4
+	while (*str) { //jdu znak po znaku, využívám toho, že poslední znak stringu je nula
+	 blabla
+	 ++str;
+	}
+
+-pointerové věci se čtou zprava
+
+REFERENCE
+ˇˇˇˇˇˇˇˇˇ
+-zafixovaný pointer, nedá se s tím dělat aritmetika
+int v = 8;
+int &pv = v;   === int *pv = &v; akorát se s tím nedají dělat brigule
+pv = 4; = přiřazuje na adresu, kam ukazuje pv
+
+FUNKCE
+ˇˇˇˇˇˇ
+-parametry se předávají hodnotou, kfyž volám, všechny parametry se okopírují a vzniká nová lokální proměna toho jména
+-pokud chci dostat ven funkční výstupní parametr, musím ji předávat ukazatelem
+-v C++ se může předávat jako reference, když tam zapíšu uvnitř funkce, bude to vidět i venku
+
+VELIKOSTI
+~~~~~~~~~
+-sizeof vrací velikost v bytech, pozor, ukazatel na pole nezná velikost pole
+
+TŘÍDY
+%%%%%
+-v c++ jsou třídy a struktury to stejné až na viditelnost zvenku
+-ale použití:
+struktury - věci, co mají být zabalíčkované pohromadě
+třídy - drží si to neviditelný stav objektu a nabízí to veřejné funkce, kterými můžu ten stav změnit
+- v c++ je úplně jasný životní cyklus třídy
+- konstruktor se volá při vzniku
+- const píšu za funkci, pokud nemění věci v třídě
+- destruktor ~class() volá se při zániku třídy
+- při dosazení jinam se všechno kopíruje, v c# se kopíruje jen reference
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
