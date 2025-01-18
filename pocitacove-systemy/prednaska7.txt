@@ -1,0 +1,89 @@
+CACHE
+- vyplatí se jenom, pokud se budu ptát znova na stejná vstupní data
+- funguje i softwarová
+- hardwarová by měla být pro programátora neviditelná
+- stale je řádově pomalejší než přístup do registru
+
+cache line
+- cache je organizovana v řádcích, vždy se to dělá po celé cache line, po kratších kouscích to nejde
+- je zarovnaná
+- vždycky to je násobek řádky paměti
+- většinou 64B
+
+úspěšnost
+- 97% cache hit
+- 3%  cache miss - plný přístup do paměti, načtu celou řádku z paměti do cache
+                 - když je úplně plná cache, musím něco zahodit
+- při přepisování - zapisuje se jen o cache, její stav skutecny nemusí odpovídat mému obrazu
+- ^^do paměti se zapíše, až když se to má smazat z cache
+- koherence cachí - aby různé procesory měly stejnou představu o stavu cache
+    - protokol MESSI
+    - ne vsechny procesory ji mají !!! pozor
+    - C# nebo Java si to řeší, C++ ne
+- hieararchie cachí - L1, L2, L3 (rostoucí)
+- hodně používaná data se bublají do L1 cache, pak se zase propadají zpátky
+- při cache miss se to hodí rovnou do L1
+
+ASOCIATIVNÍ PAMĚŤ
+""tak jsem lhal, že to bude pozdějš. bude to teď""
+- řádka je dvojice klíč a hodnota
+- dotaz na cache - je tam klíč? 
+- když je v asociativní paměti, vrátím hodnotu
+- klíče jsou adresy cache line odpovídající fyzické adrese na RAM
+- hodnota je těch 64B
+- dotaz je extrmně rychlý O(1)
+- nedá se realizovat softwarově, je to velmi drahé hardwarově
+
+NUMA - non uniform memory access
+- kolem 8-16 jader přestává fungovat von Neumannovská architektura, 
+  přetížená sdílená sběrnice SMP (symetrický multiprocessing)
+- přešlo se na tohle
+- sockety, každý má vlastní RAM, kterou ovládá svým řadičem, ty paměti jsou hápané jako jeden velký adresový prostor
+- procesory jsou pospojované vysokorychlostní sběrnicí, takže jsou všechny dostupné odevšad
+- pošlu žádost na konkrétní procesor, on data přečte a pošle
+- z pohledu programátora to vypadá úplně normálně
+- maximálně 8 socketů, cena roste exponenciálně
+- NUMA factor - jak je pomalejší přístup do ostatních pamětí, porovnání vůči normální rychlosti
+
+
+---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+
+
+GRAMATIKA
+- pravidla, určuje syntaxi
+
+PŘEKLADAČ
+- zdrojový kód -> preprocessor -> .pp -> compiler -> .asm -> assembler -> .obj -> linker(přidají se knihovny) -> spustitelný kód
+- ^^pro C, preprocesor vezme # a nahradí ten řádek kódem té knihovny, definem atd atd - překladač typu text-text
+- kompiler - překlad do assembleru, zase textově (dnes už se nedělá), rozuměl instrukcím, ale setně to byl překlad tet-text
+- asembler - už z toho vyrobí binární zápis instrukcí
+- linker - splácá to dokupy, vznikne jeden spustitelný soubor
+
+.OBJ
+- binární obraz toho jednoho zdrojáku
+
+LINKER
+- knihovny 
+  statické (rovnou přidám) jako jeden balík - zjednodušení, prostě jen balík objektů
+  dynamické 
+        (zapamatuju, že tam někde jsou ty funkce, místo volání funkce je speciální kód volající dynamickou knihovnu, 
+        která není přilinkovaná k .exe souboru (je přidaná mimo, nebo už je v počítači)
+        linker si z toho vytahá hlavičky a samotná knihovna je bokem, není ve výsledném kódu, dává se o tam až při spuštění
+        - pomalejší, menší, možno měnit nezávisle na tom, jak to slinkujeme
+- linkování - vezme objecty a najde, co se používá (rekurzivně), to pospojuje
+            - relokace
+- loader - část operačního systému, vezme spustitelný program v přesně definovaném formátu
+         - linux nerozumí windows exe souborúm a tak
+         - načte to do paměti a pustí to
+         = stává se z toho proces
+         - program je mrtvá věc na disku, proces je živý
+         
+
+
+
+
+
+
+
+
