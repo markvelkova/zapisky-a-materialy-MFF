@@ -1,0 +1,130 @@
+================================================================================
+ZAŘÍZENÍ (DEVICES)
+================================================================================
+
+TERMINOLOGIE
+- řadič (controller) - řeší topologii, nabízí rozhraní pro ovladač
+- ovladač (driver) - specifický pro řadíč, softwarově ho ovládá
+- BIOS/UEFI - rozhraní pro drivery, hw interface
+            - odteď už OS pracuje genericky a detaily ho nezajímají
+
+TOPOLOGIE
+> sběrnice  |DC|____________________________
+                  |         |         |
+                dev1      dev2      dev3
+    - může mluvit jen jeden, omezeni kapacitou sběrnice
+     
+> hvězda    dev1     dev2
+                \   /
+                |DC|
+                /   \
+            dev3     dev4
+    - odpadá režie navíc, ale řadič musí být složitější
+    - není zábrana ve sdílení sběrnice, rychlejší
+    - sériová sběrnice místo paralelní - tenčí dráty
+                                       - nedochází k přeslechům (interferenci)
+
+> kruh         |DC|
+             ↓/    \↑
+            dev1   dev3
+             ↓\    /↑
+               dev2
+    - používá se spíš ze zoufalství, pro chudé
+    - každé zařízení musí mít I/O porty
+    - může se to poslat jen tím jedním směrem
+    
+> strom          | DC |
+                /   |  \
+              dev1 dev2 hub1
+                        /   \
+                      dev3  dev4
+    - třeba USB, řadič ale musí pořád rozumět celému stromu
+    - zařízení jsou různá, chovají se jinak
+
+KOMUNIKACE ZAŘÍZENÍ
+- jak CPU dělá I/O operace?
+    - speciální instrukce - x86
+        - sahat někam a ta operace může něco znamenat pro řadič
+        - zápisy a čtení do speciálního místa
+    - paměťově mapovaná zařízení
+        - použju normální adresový prostor a tam umístím řadiče
+        - přistupuju tam obyčejnými instrukcemi
+        - namapování dělá BIOS/UEFI, musí to oznámit oběma stranám
+
+HENDLOVÁNÍ DIVAJSŮ
+1) aplikace udělá I/O rýkvest
+2) jazyková knihovna udělá system kól
+  ------- přechod do kernelu ---------
+3) kernel si rozhodne, kterého zařízení se to týká (který soubor, disk...)
+4) kernel přistoupí na ovladač, řekne mu: přečti to odtud potud
+5) ovladač vydá drátama pokyn pro řadič
+  ------- přechod do hw ---------------
+6) až je sežere, zařízení něco dělá
+7) ovladač čekuje, jestli už nenastala změna
+8) až jsou data připravena, řadič se ozve, ovladač je přečte, dá do paměti
+  ------- přechod do kernelu ----------
+9) I/O operace naplňující rýkvest jůsra
+  ------- přechod do aplikace ---------
+  
+ČÍHÁNÍ, JESTLI UŽ DATA JSOU
+- polling - |: kouknu, ms dělám něco jiného, :|
+          - ale přerušuji svou činnost, staré, přežité
+- přerušení - řadič má možnost elektricky uvědomit CPU, že chce pozornost
+            - "Já chci, aby se mnou někdo mluvil" 
+            - "elektrické zatahání za nožičku"
+            - CPU přeruší aktuální běh instrukcí a najednou řeší tu věc
+            - sám se přepne do kernel režimu, zavolá příslušný ovladač
+            - schová si řerušený stav, pak se vrátí, aplikace nepozná nic
+            - hezké, ale pořád procesor vykonává zbytečně instrukce
+- DMA (direct memory access)
+        - přenese data do/ze zařízení bez potřeby pozornosti CPU
+        - DMA řadič, ten si naprogramujeme
+        - potom vyvolá přerušení "přenesl jsem ti ty data, kámo"
+        - scatter/gather
+
+IGNORACE EXTERNÍCH PŘERUŠENÍ, maskování
+- je možné dočasně ignorovat přerušení, ale potom se musí zpětně řešit  
+
+HARDWAROVÉ VÝJIMKY
+- divná instrukce
+- např instrukce dělící nulou, adresa neexistuje
+- jsou předdefinované pro architekturu (x86 jich má 32)
+- trap - mám problém, ale už jsem tu instrukci zpracoval a jsem za ní
+       - třeba dělení nulou
+       - přerušení se vyrobí za instrukcí
+- fault - podívám se na ni a je divná na první pohled
+        - výjimku hlásím před instrukcí
+        - můžu něco opravit v OS, a pak to zkusit znova
+
+SOFTWAROVÉ VÝJIMKY
+- speciální instrukce (x86 int)
+- používalo se pro přechod do/z kernelu
+- dnes se nepoužívá
+
+PŘERUŠENÍ x86
+- 256, z toho prvních 32 výjimky arch. (8 double fault, při triple zamrzne)
+- ostatní volné pro SW přerušení
+
+PRŮBĚH PŘERUŠENÍ
+- zatahá se za nožičku
+- SÁM TEN PROCESOR DĚLÁ:
+    - co to bylo, odkud se to vzalo (řekne řadič přerušení)
+    - musí zjistit adresu interrupt handleru - zafixovaná nebo tabulka přerušení
+        - prostý vektor, hodnoty jsou adresy uvnitř jádra, kde je adr. přer.
+        - tabulku připraví OS, zaindexuje se a mám adresu
+    - přeruším běh svých instrukcí (děje se to mezi instrukcemi)
+    - přejde se do kernel režimu
+    - instruction pointer si někam schovám, registry ne
+    - začnu vykonávat instrukce na získané adrese
+- DĚLÁ OPERAČNÍ SYSTÉM
+    - schovám obsah zbývajících registrů
+    - něco udělám
+    - znovu nastavím stav procesoru, obnovím to
+    - systémová instrukce návrat z přerušení, vyleze z jádra, obnoví IP
+- DĚLÁ PROCESOR
+    - poračuje si nerušeně dál
+
+
+
+
+

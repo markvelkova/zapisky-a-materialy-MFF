@@ -1,0 +1,137 @@
+________________________________________________________________________________
+PŘÍKAZY V C A C++
+ˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇ
+- celý blok {} se chápe jako jeden příkaz
+
+IF
+- pokud je hodnota různá od nuly
+- v () může být cokoli porovnatelné s nulou
+
+SWITCH
+switch (expr pouze int nebo výčet) {
+case 0:
+    //sth
+    break;
+case 1:
+case 2:
+    //spolecny kod pro case 1 a 2
+    break;
+default:    //když není, neudělá se nic
+    break;
+}
+
+WHILE
+- jako u ifu, dokud různé od nuly, porovnání před prvním provedením
+
+DO WHILE
+- porovnání až po provedení
+
+FOR
+- (inicializace; test; inkrementace - může být libovolný výraz)
+
+GOTO
+- na návěstí, když potřebuju udělat break přes víc úrovní
+- NEMŮŽU SKÁKAT MEZI FUNKCEMI
+- není rozumné skákat dovnitř o jiného bloku
+
+________________________________________________________________________________
+OPARÁTORY A VÝRAZY
+^^^^^^^^^^^^^^^^^^
+aritmetické
+  +,=,*,/,%
+  ++,--
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        !!!!   i = 5;                        !!!!
+        !!!!   j = ++i; --> i = 6; j = 6;    !!!!
+        !!!!   j = i++; --> i = 6; j = 5;    !!!!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+porovnávací
+  <, <=, >=, >, ==, !=
+bitové
+  ~ ALTGR+1 negace
+  & ALTGR+C and
+  | ALTGR+W or
+  ^ ALTGR+3 xor
+  <<, >>    u znaménkového se kopíruje nejvyšší bit
+logické
+  &&, ||, !
+ukazatele
+  &, *
+přiřazení
+  =, +=, -=, *=, /=, %=, &=, |=, ^=   je to pořád výraz - můžu řetězit, if (i=5) platí, pokud i !=0
+velikostní
+  sizeof v bytech
+  szeof(int)
+  sizepf(i+4) - spočítá se jen typ, ne výraz
+TERNÁRNÍ VÝRAZ
+- test ? e1 : e2
+
+________________________________________________________________________________
+POLE
+^^^^
+- nikdo nekontroluje, jestli jsme nesáhli vedle
+- inicializace jen části: int pole[1000]={1,2,3,};
+- u vícerozměrných uožení po řádcích
+
+STRING
+^^^^^^
+- pole charů automaticky zakončené '\0' nulou
+- char str[] = "Hippo";
+- TOHLE NENÍ STRING char chars[] = {'H', 'i', 'p', 'p', 'o'};
+________________________________________________________________________________
+ZAROVNÁNÍ PAMĚTI
+^^^^^^^^^^^^^^^^
+- char kdekoli, int na násobcích 4 etc.
+________________________________________________________________________________
+STRUKTURA
+^^^^^^^^^
+- struct point2d {
+    int x, y;
+  };
+- je tam uvnitř padding kvůli zarovnání paměti
+- padding zvenku na zarovnání podle velikosti největšího datového typu
+- přehazovat se nemůže
+- struct data {
+    cahr c;
+    double d;
+    int i;
+  };
+  c-------
+  dddddddd
+  iiii----
+________________________________________________________________________________
+
+KOSTANTY
+^^^^^^^^
+const int the_answer = 42; - má místo v paměti, dá se z toho vzít adresa
+cosntexpr int the_answer = 42; - neexistuje v paměti
+#define THE_ANSWER 42 - dělalo se dřív, textově se nahradí ještě před překladem
+________________________________________________________________________________
+
+VÝČTOVÉ TYPY
+^^^^^^^^^^^^
+enum state_t{ něco1, něco2, něco3 }; - céčkové, dostane to int hodnoty
+
+class enum state_t{ něco1, něco2, něco3 }; - c++kové
+state_t s = state_t::něco2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

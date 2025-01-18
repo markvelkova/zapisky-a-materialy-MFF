@@ -1,0 +1,88 @@
+PAM̍ĚŤ
+
+SLOVA A PŘÍSTUP
+- bity adresované po slovech, mocniny dvojky - délka slova dle adres. prostoru
+- na jedné adrese jen jeden byte, nepřekrývají se
+- v reálu ta paměť není pole, ale dvojrozměrné pole
+    - třeba osm 2D čipů, každý z nich dá jeden bit - chytré
+    - nebo jinak, adresa se rozdělí na části, někerá udává sloupec, jiná řádek
+        - potom je možné vybrat řádek a jen se posouvat po sloupcích - šetří čas
+    - CAS - column access strobe - kolik taktů trvá, než řeknu, jaký sloupec
+    - RAS - row access strobe - kolik taktů trvá, než řeknu, jaký sloupec
+
+ENDIANITA
+- little - Intel (x86)
+- big - většina kulturních procesorů
+
+HEXDUMP
+ZAROVNÁNÍ PŘÍSTUPU NA SLOVO NA VELIKOST SLOVA
+- adresa musí být například násobek osmi pro osmibytovou věc
+- položky ve struktuře se v C nebo C++ nesmí prohazovat
+- problém při poli struktury - velikost věech dle největší položky
+    - sizeof položky je sizeof té největší možné podle CPU
+    - vnitřní zarovnání vs vnější zarovnání
+    
+LOKÁLNÍ PROMĚNNÉ
+- na zásobníku
+
+GLOBÁLNÍ
+
+DYNAMICKÉ PROMĚNNÉ
+- malloc, alokované explicitně programátorem
+- místo se najde na heapu
+- alokuju blok a vrátím adresu, používám blok, uvolním blok (!garbage collector)
+
+FRAGMENTACE PAMĚTI
+- vnitřní - je tam určitě minimální alokovatelná velikost - zabere se víc, než musí
+- vnější - zůstanou tam kousky uvolněné roztroušené po malých kouscích
+- sesypání heapu v C není možné
+- potřebuju evidenci volného místa
+    - spojový seznam z volných bloků
+    - bitmapa - po bytech by zabírala moc místa, dělá se po větších blocích
+    
+ALOKOVACÍ ALGORITMY
+first fit
+ - začnu od začátku, vezmu první dost velký blok
+ + rychlé jednoduché
+ - může rozdělit větší bloky
+next fit
+ - pamatuje si poslední blok, kam jsme dívali ve spojáku a odtud hledá
+ + rychlé, nevytváří fragmentaci na začátku
+best fit
+ - začne od začátku, hledá nejmenší dost velký prostor
+ + uchovává velké bloky
+ - pomalejší, projdu celý spoják, vznikají strašně malé bločky 
+ - je to možná nakonec horší občas
+worst fit
+ - zaplní od začátku, hledá největší blok
+ ???
+ 
+CO BUDE U ZKOUŠKY
+- vezmu velikosti alokované a zaokrouhlím nahoru na velikosti bloků 
+  (převést si to na poče bloků)
+  ^^vydělím a zjistím počet bloků
+- počítam bloky, při převedení na adresu zase násobím
+- dealoace, realokace podle algoritmu
+
+BUDDY MEMORY ALLOCATION
+- bloky velikosti mocnin dvojky (různých)
+- blok velikosti n je zarovnaný na násobek n
+- mám seznam bloků
+- když malé bloky nemám - štípu velké
+- alokace běží v konstantním čase 
+- může být dost velká interní fragmentace
+- vytvořím si pole těch bloků, je konstantní velikosti 
+  - jeho procházení je konstantní složitost xd
+- v bloku udávajícím velikost mám spoják na volné bloky této velikosti
+- když je jen větší, vezmu ho a rozštípnu na dva menší
+- potom hledám buddies, ty, co spolu dřív byli v bloku - xor jejich adres dá
+  ^^to je lineární
+
+
+
+
+
+
+
+
+    

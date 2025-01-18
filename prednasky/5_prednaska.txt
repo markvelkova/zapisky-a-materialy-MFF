@@ -1,0 +1,106 @@
+Je dobré uvìdomit si, e místo sloité instrukce násobení 5 lze pouít shift (násobení 4) a pøiètení
+
+Flagy
+- systémové a uivatelské
+- v x86 jsou pomíchané a plıtvá se spousta tranzistorù na schovávání systémovıch 
+- sign, overflow, zero, carry, parity jeden divnej z dùvodu kompatibility s x80
+- normální procesory to mají od sebe oddìlené
+
+ISA klasifikace architektury
+- CISC - complex instruction set computer (x86 a na to, e ne)
+    dìlaly se, dokud lidi programovali v assembleru
+- RISC - reduced instruction set computer
+    pøekladaèe pouívají jen málo instrukcí (ARM a na to, e ne)
+- ale stalo se, e to urèitım divnım zpùsobem zkonvergovalo a je to nìco mezi tím
+- RISC zdegeneroval, u se dneska nedá moc najít
+- VLIW - very large instruction word
+  instrukce má tøeba 128 bitù, je vyøešeno dekódování instrukce speciálními bity
+  rychlejší o hodnì
+- EPIC - explicitly parallel instruction computer
+
+ISA ortogonalita
+- všechny registry jsou si rovny
+- u MIPSu se to tak tváøí hardwarovì, samozøejmì ABI to nìjak upravuje
+- ^ ale pøece jen je tam JAL a ZERO, které to narušují
+- v x86 ortogonalita není, registry mají speciální vıznam
+
+Load-Execeute-Store
+- execute pracují pouze s registry
+- s pamìtí pracují jen load a store
+- jde to udìlat, jenom kdy je registrù hodnì
+- u všech normálních procesorù (take u x86 neplatí xd)
+
+kompromis - CACHE
+
+JÁDRO PROCESORU
+- registry
+- logickı procesor (thread)
+    - sdílí vıpoèetní prostøedky, schová to pomalost operaèní pamìti 
+    - pøi loadu napøíklad èeká, ne se to naète
+    - kdy máme jen jeden, zasekne to celé jádro
+    - takhle se zasekávají postupnì a ostatní zatím nìco dìlají
+- cache - dnes vìtšinou oddìlena datová od instrukèní (desítky kB, 4x pomalejší)
+        - potom univerzální (asi 16x pomalejší ne registry, stovky kB)
+        - spoleèná pro jádra (a desítky MB)
+        - úkol všech je chytit loady a story, aby se nesahalo do pamìti
+        - dnes úspìšnost asi 95%
+        - load je horší, store mùe bìet na pozadí
+- jádra tøeba na kruhové obousmìrné sbìrnici, aby spolu mohla komunikovat
+- realizace cache - je rozkouskovaná pro kadé jádro, bìí to po tom krouku
+  ^ take u úplnì neplatí stejná rychlost pøístupu, není unifikovaná
+- cache, front end (dekódování na mikroinstrukce (a 5/takt)), vıpoèetní jednotky
+- dekodéry mohou rozdìleny na simple a complex, 
+  ale kdy se pouívá complex, jsou bloknuté ostatní
+
+PIPELINE
+- vykonávání instrukce rozdìleno na stage
+- kadá instrukce musí projít všemi
+- dnes vìtšinou asi 14-19 stage
+- ideální situace je, e všechny stage jsou zaplnìné a vykonávají se postupnì 
+- NÁBÌH PIPELINE:
+  ^nìjakı poèet taktù trvá, ne se pipeline zaplní (trvá podle délky pipeline)
+- problém s podmínìnım skokem, a nìkde uvnitø zjistím, jestli skáèu, nebo ne, 
+  ale mezitím se pipeline nìkde naplòuje
+  - u pøi fetchování odhalím podmínìnı skok, 
+    sáhnu do jednotky predikce skoku a ta pøedpoví, kam se bude skákat
+  - kdy to vyjde, je to skvìlé, kdy ne, tak fetchuju ze špatnı vìtve, 
+    musím celou pipeline zahodit a znova naèíst druhou vìtev
+  - èím delší pipeline, tím delší nábìh
+  - 97% se trefuje
+  - jednotka vede historii skokù, odhalí pøípadné vzory (obvykle hloubka 16 bitù)
+  - první odhad - skok na adresu niší se provede, skok na vyšší se neprovede
+    ^ je to kvùli tomu, e bìnì je pøi pøeklady podmínka za tìlem 
+      a já jsem optimista a vìøím, e se to bude opakovat
+  - skok dopøedu je bìnì else vìtev
+  - take pravdìpodobnìjší varianta by mìla bıt v if vìtvi- ušetøím pipeline
+  - bude úplnì vedle tøeba u testování random èísla na sudost lichost
+  
+SUPERSKALARITA
+- víc pipeline, v jednom okamiku jsme schopni zpracovávat víc instrukcí
+
+OUT OF ORDER EXECUTION
+- komplikovaná logika uvnitø procesoru
+- mikroinstrukce jakoby plavou v bazénku a ví, ke které vıpoèetní jednotky vlézt
+- ale lezou tam mimo poøadí
+- co by ale bylo špatnì, chceme, aby to vypadalo navenek jako sekvenèní procesor
+- na znovuseøazení potøebujeme velkou logiku, víc to ere, víc to topí
+
+_________________________________________________________________________________________________________________________________
+
+PAMÌ
+¡¡¡¡¡¡
+VRSTVY PAMÌTI
+pásky - vydrí dìsnì dlouho 
+------------------- náhodnı pøístup -------------------------------------------
+  HDD - toèící rotaèí disky, malé desítky TB, v diskovıch polích nebo serverech 
+    SSD, flash - TB, nenáchylné na pád, cenovì pøijatelné
+---------- procesor ještì mùe rovnou pøistupovat rovnou do toho pod -----------
+      persistent RAM 
+------------- pøi vypnutí se ztratí vše pod ------------------------------------
+        RAM - ta hlavní pamì GB, menší desítky a stovky u serverù
+          cache (teoreticky neviditelná)
+            registry
+
+
+
+

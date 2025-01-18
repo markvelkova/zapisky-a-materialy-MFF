@@ -1,0 +1,167 @@
+ROZLOŽENÍ PAMĚTI V RÁMCI PROGRAMU
+- kód - read-only, nebo ani to ne, jenom fetchování instrukcí
+- statická data - proměnné, mohou být readonly, ale nemusí
+^^obojí jasně dané už při spuštění
+- stack - zásobník volání funkcí, návratových adres (x86 roste na menší adresy)
+- heap - není to halda, je to kus paměti, kde si můžeme dynamick za běhu alokovat paměť
+
+jemnější:
+  - kód
+  - konstanty (floatové jsou pomalé), read-only
+  - inicializovaná statická data
+  - neinicializovaná statická data 
+    - obraz není schován v exe, je tam loader a běhová podpora runtime, 
+      ten naakoluje a vynuluje, během linkování tam ta nula tedy ještě není - to nulování trvá
+  - zásobník je třeba po každé vlákno, rostou do sebe a to je problém
+  - halda
+ 
+LINKOVÁNÍ pokračování 
+- překladač ví, co kam patří, takže v objectech už je to v segmentech
+- pustím linker, on řadí ty jednotlivé segmenty za sebe a snaží se je složit do jednoho velkého
+- po linkování jsou opět adresy mezi segmenty souvislé
+
+- když něco hledám, kledám to mezi všemi přilinkovanými publicy, když nenajdu, hodím chybu
+- tak to dělám pořád dokola
+- ve spustitelném kódu je pak hlavička, kde je napsáno, odkud kam je který segment
+
+- nuto řešit zarovnání dat v rámci malých segmentů (aby konstanty začínaly správně)
+- také zarovnání mezi velkými segmenty (typicky 4k)
+
+- potom je třeba počítat si posunutí uvnitř segmentu a začátek segmentu - potom vím, kde mi začínají konstanty pro ten daný obj
+- je třeba opravit adresy v instrukcích 
+- opravuje i obsahy globálních proměnných, pokud obsahují adresy
+
+STATICKÁ A DYNAMICKÁ PODPORA
+- musím si to naplánovat
+statická
+- library interface, kompiler
+dynamická
+- rozložení paměti, runtime, knihovny, volací konvence
+
+VOLACÍ KONVENCE
+- vydá se abi, které se dodržuje, volací konvence je dodržena
+- pokud to majitel architektury neřekne, musí to udělat majitel překladače
+- když chybí abi, může být problém přeložení knihovny a kódu jinými překladači
+
+- public name mangling - mandlování
+- co jde kam, kdo co uklízí
+- pořadí parametrů - zprava doleva, zleva doprava
+- kudy se předává návratová hodnota
+- které registry saved, které scratchové
+
+AKTIVAČNÍ ZÁZNAM = STACK FRAME
+- má ho každá funkce, leží na zásobníku
+- vyrobí si ho při zavolání, po skončení si ho smaže
+obsah:
+- návratová hodnota - nepovinné
+    - vracím velký typ, který se mi nevejde do registru
+    - tu věc (volající ví, co bude volaná vracet) si volající připraví na zasobníku
+    - funkce má tajný nultý parametr, ví kde má tu návratovou hodnotu, vrátí ten kus paměti
+    - tohle se netýká C#, tam se vrací pointer
+- parametry funkce - nepovinné
+    - funkce volající tam naskládá ty parametry a uloží je na zásobník (každý jazyk jiným směrem)
+- návratová adresa do volající funkce - povinné
+- control link
+    - já jako funkce mám registr (frame pointer), kterým ukazuju do aktivačního záznamu fce
+    - x86 na to má BP base pointer
+    - MIPS má FP
+    - pomocí frame pointeru se adresuje, funkce si spočte, kde leží parametry, lok. proměnné
+    - offset je zafixovaný, během běhu se nemění
+    - to je ten předchozí frame pointer funkce, která mě volala, 
+      natáhnu ho po svém skončení do registru, takže voljící má fp správně nastaven po návratu
+- saved machine status
+    - je určena možina registrů, které se nesmí přepsat, pokud je použije funkce volající
+
+PUBLIC NAME MANGLING = mandlování
+- znetvořit, k nepoznání změnit
+- každý překladač jinak
+- C++ dovoluje funkce se stejným jménem, ale s různými parametry (typově)
+- C to zakazuje, proto tam tahle věc neprobíhá
+- celé je to o tom, jak obelstít starý linker, který s tím nepočítal
+- zakóduju parametry do jména, tím je to rozlišitelné
+
+CALL/RETURN SEKVENCE
+- kdo za co odpovídá, kdo co uklízí
+  v C::
+- volající uklízí:
+  svoje linky a machine state, svoje lokální data, parametry a návratovou hodnotu volané
+- volaná uklízí:
+  svoje linky a machine state, svoje lokální data, parametry a návratovou další funkce
+  
+PŘEDÁVÁNÍ HODNOTY
+- hodnotou - spočte se, dosadí do lokální, dál už žádná souvislost
+- ukazatelem - jako lokální hodnotu mám parametr, měním přímo ten objekt, může být vstupní i výstupní
+             - ušetří se čas jinak spojený s předáváním parametru (kopírování velké struktury) i prostor
+
+PROMĚNNÁ
+- má typ
+- C: statická, lokální na zásobníku, dynamické na heapu
+- Python, PHP, JS: dynamická slovníková struktura, do jména se dosazuje hodnota a typ - typ se může měnit
+^^při překladu to ještě nevím - žere mi to spoustu času
+
+HEAP
+- alokace - explicitní akce (C# new, C malloc)
+          - algoritmy na detekci a evidenci volných bloků
+- dealokace - expicitní akce (C, C++)
+            - automatická garbage collectorem - pojde heap, uvolní bloky
+            ^^ale musíme mít dobrý přehled o živých objektech a referencí
+GARBAGE COLLECTOR
+výhody:
+- odstraní hodně programátoských chyb 
+    - memory leak, dvojnásobné volání free
+- umožňuje defragmentaci, sesypání - heap consolidation - a rychlou alokaci
+nevýhody:
+- spustí se v náhodnou dobu, může se stát, že celý program zamrzne na pár sekund
+- nepředvídatelný
+- není dobrý pro real-time věci - nepoužívejte Javu, až budete programovat jaderku
+strategie:
+- tracing (stopování)
+    - projdu aktivační záznamy LOKÁLNÍCH PROMĚNNÝCH ve všech vláknech
+    - označím si všechny objekty na heapu jako nepoužité
+    - pokud najdu referenci na heap, označím si, jako použito
+    - podívám se rekurzivně na reference
+    - nepoužité zabiju
+- reference counting
+    - kromě typu si tam dávám ještě počítadlo
+    - při zániku proměnné ho dekrementuju, při kopírování inkrementuju
+    - problém s cykly - musím potom ještě najít orientované kružnice bez ocasů venku
+
+PŘENOSITELNOST KÓDU
+vůči
+1) architektuře procesoru
+ - řada jazyků má zafixované velikosti a chování - je to jedno víceméně (Java, C#)
+ - u jiných bychom měli používat typy s fixní velikostí typů (C, C++)
+2) překladači
+ - pokud je jenom jeden, pak je to vždycky přenositelné (C#)
+ - C++ (gcc, msvc, clang...) v normě jsou odlišnosti a je třeba dávat pozor
+ - nepoužívat překladače, které přidávají věci nad normu 
+3) na OS
+ - Java, C# řeší se samo v knihovně
+ - C, C++ - různé funkce na stejné věci atd atd
+
+BINÁRNÍ PŘENOSITELNOST
+- zadefinuju si virtual machine, přeložím to pro něj (Java - bytecode, C# - CIL)
+- jednou to přeložím a potom distribuuji, každý virtual machine pro daný procesor si to upraví 
+
+jak to řeší Java
+JIT = just in time
+- překlad z bytecodu za běhu, ukládá se do cache
+- z počátku používal Android
+- mělo to tendeci se občas cuknout, cache může dojít, pak se to smázne a musí se znova
+
+nelíbilo se to googlu - sekaly se hry
+AOT = ahead of time
+- přeloží se to během instalace - ta můžee trvat dlouho, ale pak už to běží stabilně
+- potenciální bezpečností problém - překladem ztrácí kontrolu
+
+
+
+  
+  
+  
+
+
+
+
+
+  

@@ -1,0 +1,155 @@
+================================================================================
+ S  O  U  B  O  R  Y
+================================================================================
+
+- jádro nerozumí obsahu souborù, jenom tìm spustitelným
+- vìtšinou na disku
+- identifikace jménem a cestou, adresáøe se strukturou DAG
+- pøevod z cesty a jména na èíslo používané operaèním systémem
+- otevøení souboru to udìlá lokálnì pro proces
+- založí se datová struktura v procesu
+- mají ukazovátko, kde se zrovna pracuje
+
+CO S NIMI MÙŽEME DÌLAT
+- otevøení (musí už existovat) - blokující operace
+- vytvoøit, smazat, zkrátit, zmìnit atributy
+- flush - zapsat zmìny na disk
+- vìtšina jsou blokovací
+- mám ale i asynchronní
+    - øeknu žádost, neblokuje se to, bìhem ètení poèítám dál
+
+PØÍSTUP
+- rychlejší sekvenèní
+- pomalejší random access (databázové servery)
+
+ADRESÁØ/SLOŽKA/DIRECTORY
+- množina souborù
+- efektivita, pojmenovávní, seskupování
+- speciální typ souboru
+> KOØENOVÝ adresáø
+    - první adresáø, každý file system má svùj
+- vytváøet, mazat, pøejmenovat, manipulovat se soubory uvnitø
+- hledání jména souboru, musí být rychlé
+- vypsání obsahu
+
+KDE MÙŽOU SOUBORY LEŽET
+- èekáme, že jsou persistentní - vìtšinou na disku
+- pro doèasné, ale rychlé - na RAM
+- síové úložištì
+- virtuální fle system  - abstrakce - /dev/random
+
+FILE LINKS
+- hard link
+- soft link - tahle cesta je vlastnì tahle cesta, spešl soubory symlink
+
+FILE SYSTEM
+1) jméno -> binární reprezentace
+2) management disk blokù
+3) které datové bloky a v jakém poøadí patøí souboru
+> lokální - na HDD, SDD
+          - FAT, NTFS (windows), ext234 (linux), XFS
+> síové - NFS, SMB
+
+FAT - file allocation table                                   !!!BUDE V TESTU!!!
+- prastará vìc z DOSu
+- položky fixní délky, délka záznamu musí být násobek položky
+- jsou tam prostì naházené položky, prochází se lineárnì pøi hledání
+- binární struktury se schovanou identifikací vìcí prostì
+- není tam chytrá datová struktura dovolující rychleji hledat
+- ta tabulka je jediná datová struktura, kterou to má
+  > mangement blokù, bloky souboru
+- adresáø: zaèáteèní cluster, name+ext, velikost, timestamps, atributy
+- root je fixní
+- FAT je pole èísel prostì, pùvodnì 16bit
+
+                FAT - vnìjší struktura
+                ----------------------
+                    ---------------
+                    | boot record |
+                     -------------
+                    |    FAT1     |
+                    |    FAT2     |  - pøesná kopie FAT1
+                     -------------
+                    |    root     |
+                     -------------
+                    |    data     |
+
+               FAT  - vnitøní struktura
+               ------------------------
+            2 [0 ]  3 [10]  4 [0 ]  5 [-1]      a.txt 13 -> 13, 8, 5
+            6 [0 ]  7 [0 ]  8 [5 ]  9 [0 ]      b.txt 3  -> 3, 10, 15, 14
+            10[15]  11[0 ]  12[0 ]  13[8 ]      0 ... volno, -1 ... konec
+            14[-1]  15[14]  16[0 ]  17[0 ]      nìco jiného ... odkaz na další
+
+
+EXT2 - na linuxu
+> inode 
+  - index node - reprezentuje jeden soubor, adresáø
+  - vìtšina atributù
+  - stromeèek
+> adresáø
+  - sekvence záznamù s fixní strukturou, inode èíslo
+> block group:          -------------
+    superblock         | info
+    descriptor         | block 0 -> data block
+    data bimap         | block 1 -> data block
+    inode bitmap       |  ...
+    inode table ------>| block 11
+    data blocks        | block 12 (I) - ukazuje na inode o 128 data blocích
+                       | block 13 (DI) - inode ukazující na 128 inodù ...
+                       | block 14 (TI) - triple index
+                        --------------
+
+HARD DISK - A pøece se toèí...
+- mùže být víc talíøù, všechny sektory nad sebou - blok, kružnice - cluster
+- hlavièky jsou nanometry od talíøù
+- nejmenší jednotka sektor
+> pøístupový èas
+  - seek time - správná stopa - ms
+  - rotational latency - èekání na správný sektor - prùmìrnì 1/2 rychlosti
+  - trasfer time - pøenos dat, rychlé celkem
+> algoritmy rychlého pøístupu - dnes už je mají disky v sobì
+  pøíklad: rýkvest - 82,170,43,61,24,16,190
+           poèáteèní pozice - 50
+  FCFS
+  - kdo døív pøijde, ten døív mele
+  - pøi malé zátìži je nejlepší
+  SHORTEST SEEK TIME FIRST
+  - 50,43,61,82,24,16,170,190
+  - pokud poøád pøichází nové blízké, na vzdálené se nedostane
+  SCAN - výtahový algoritmus
+  - udržuje smìr pohybu
+  - 50,61,82,170,190,199,43,24,16,0
+  - dobrý pro tìžké vytížení systému, nejlepší obecnì
+  - modifikace - smìr je vždy nahoru CSCAN - circular - lepší èasy než SCAN
+               - dvì fronty, nové do druhé atd atd
+> file systemy na nich
+  - partitioning - každá èást vlastní klidnì, na zaèátku struktura s pøehledem
+> RAID - redundant array of inexpensive discs
+  - RAID 0 - dva disky, kombinace blokù - velmi rychlé, když umøe, je to pryè
+  - RAID 1 - dva disky, pøesná kopie - záloha
+  - RAID 5 - víc diskù, jeden obìtovaný na paritu 
+           - dopoèítají se hodnoty ztraceného disku
+
+SSD
+- nemá rotaèní vìci, je to celé elektrické
+- bloky ze stránek (page)
+- èím víc bitù na jednotku, tím levnìjší na výrobu, tím pomalejší
+- nejmenší jednotka page
+- zápis nových dat ok
+- mazání starých pouze na celý blok
+  - pøesune se zachovávané jinak, potom se smaže celý starý blok
+- vydrží jenom urèitý poèet zápisù, èasem se unaví, pøesouvá se to na náhradní..
+- komplikovaná režie, ale odolné na nárazy a o nìkolik øádù rychlejší proti HDD
+
+
+
+
+
+
+
+
+
+
+
+
