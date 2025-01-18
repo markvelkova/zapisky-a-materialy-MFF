@@ -1,0 +1,903 @@
+mohlo by bıt
+ ____FTP___________________________________________SMTP
+ 1xx pøedbìná kladná odpovìï_________________________"accept, pošlu další zprávu"
+ 2xx kladná (definitivní) odpovìï________________________OK/Beru
+ 3xx neúplná kladná odp. (chci další pøíkaz/nìco potøebuju)___Beru a nìco chci
+ 4xx doèasná záporná odp. (je moné ptát se znovu)________Teï není èas (spam protection)
+ 5xx trvalá záporná odp. (nepodaøilo se a neopakuj)________Neberu (graylisting)
+
+
+
+
+
+
+
+%BASIC
+Oznaète nepravdivé tvrzení tıkající se porovnání metody pøepojování paketù a pøepojování okruhù.
+  Bìná telekomunikaèní sí 
+  vyuívá takzvané pøepínání okruhù. Kdy nìkomu zavoláte, sí najde posloupnost 
+  uzlù (okruh) potøebnıch k propojení vašeho zaøízení a koncového zaøízení, kterému 
+  voláte. Jakmile je tento okruh vytvoøen, všechna zvuková data se pøenášejí touto 
+  cestou. Pokud nepøítel napadne nìkterı uzel okruhu, spojení je ztraceno.
+  Øešení tohoto problému je docela snadné. Data rozdìlíme na menší bloky, tzv. 
+  pakety, a kadı paket si najde vlastní cestu k cílovému uzlu. Pokud je napaden 
+  nìkterı uzel, paket najde alternativní cestu. Pøenos se tím trochu zpomalí, ale zpráva 
+  bude doruèena. V dnešní dobì mùe bıt dùvodem selhání uzlu nejen útok nepøítele 
+  (hackera), ale také vıpadek napájení, chybná konfigurace atd. Riziko vıpadku uzlu 
+  tedy stále existuje, a proto souèasné sítì pro doruèování dat pouívají právì tento 
+  model, tzv. pøepínání paketù.
+  Pøi porovnávání tìchto metod lze øíci, e pøepínání obvodù je sice rychlejší ale ménì 
+  spolehlivé, zatímco pøepínání paketù je pomalejší, ale odolné vùèi chybám
+
+Jaké charakteristiky z hlediska pøenosovıch parametrù mají následující typy aplikací resp. protokolù?
+    multimediální (realtime=latency/jitter), 
+    SMTP (ztrátovost dat)
+    
+Kterı z následujících termínù nepatøí mezi pøenosové parametry poèítaèové sítì?
+    patøí:
+    Latence, neboli zpodìní komunikace
+    Jitter je rozptyl zpodìní
+    Ztrátovost dat znamená, jak èasto dochází k tomu, e nìjakı paket není doruèen; 
+    Šíøka pásma (bandwidth) kolik dat lze zakódovat a pøenášet pomocí konkrétních 
+        fyzickıch signálù, nikoli skuteènou rychlost signálù.
+
+Které z následujících tvrzení tıkajících se WAN je pravdivé?
+    Rozlehlé sítì, 
+    vzdálenı pøístup, 
+    velké vzdálenosti=vìtší zpodìní, 
+    mnoho vlastníkù=distribuované øízení
+
+Které z následujících tvrzení tıkajících se LAN je pravdivé?
+    Sdílení prostøedkù (tiskárny, databázové servery), 
+    menší vzdálenost=malé zpodìní, 
+    jednotné vlastnictví a øízení
+    
+Oznaète pravdivé tvrzení o peer-to-peer (P2P) resp. klient-server aplikaèních modelech.
+    Klient-server = klient zná pevnou adresu serveru, navazuje komunikaci, zadává poadavky, 
+    server obsluhuje více klientù najednou, download/upload (DNS, WWW, SMTP)
+
+    Peer-to-peer = partneøi neznají pevné adresy zdroje dat, 
+    nejsou dané role=kadı zároveò klient i server (Napster, Gnutella, BitTorrent)
+    
+Které z následujících tvrzení o RFC je pravdivé?
+    prostøedek standardizace internetu
+    rùznı charakter – standardy, informace, návody
+    nemìnné, pøi zmìnì se vydá nové
+    ne všichni je dodrují
+    veøejnì pøístupná
+
+%KRYPTOGRAFIE
+Jaké tvrzení o symetrickıch a asymetrickıch šifrovacích algoritmech je pravdivé?
+    Symetrickı = pøíjemce i odesilatel stejnı klíè – musí bıt tajnì domluven, rychlé vhodné na velká data 
+    (Historie: šifrovací møíky, tabulky), dnes analogické principy pøevedené do digitální podoby+matematika, DES, Blowfish, AES, RC4
+
+    Asymetrickı = veøejnı šifrovací a soukromı (symetrickı) dešifrovací klíè (kdo chce zašifruje mi to a le jen já vím jak to pøeèíst)
+
+Jaké vlastnosti musí splòovat hashovací algoritmus pro pouití v kryptografii?
+    malá zmìna -> velká zmìna
+    jednocestná funkce, zpìtnı postup nemonı, nalezení textu se stejnım obtíné
+
+Na jakém principu funguje šifrování elektronické pošty?
+    zašifruji zprávu symetricky 
+    a klíè, kterı je kratší, asymetricky veøejnım klíèem pøíjemce
+    pøipojím klíè k textu
+    
+Na jakém principu funguje elektronickı podpis?
+    spoèítám hash textu
+    zašifruju ho soukrovım klíèem a pošlu s hashovací fcí
+    pøíjemce si vypoèítá hash
+    porovná s rozšifrovanım
+    pokud jsou stejné, nikdo nic nezmìnil a zpráva je ode mne
+
+Které tvrzení charakterizuje Diffie-Hellmanùv algoritmus?
+    Algoritmus je zaloen na 
+    jednocestnıch funkcích a základní princip je takovı, e obì strany si drí své tajné 
+    èíslo a kanálem posílají pouze vısledky diskrétních logaritmù. Díky jednocestnosti 
+    funkcí nikdo, kdo nezná tajnou èást informace, nemùe vypoèítat koneèné sdílené 
+    tajemství
+    
+Které tvrzení o klíèích a certifikátech je pravdivé?
+    Ke klíèi mùete pøipojit identifikaèní 
+    znaèku a nechat nìkoho potvrdit, e toto propojení je správné
+    web of trust - navzájem si uivatelé potvrzují pravost - pgb klíèe u e-mailu
+    nebo CA certificted authorities, které se potvrzují navzájem, buï najdu v øetìzci 
+    nìjakou dùvìryhodnou, nebo nic. Seznamy dùvìryhodnıch
+    platnost mùe vypršet
+    
+Jaké tvrzení o SSL resp. TLS je pravdivé?
+    Mezivrstva mezi transportní a aplikaèní vrstvou umoòující autentikaci a šifrování
+    Vyuívá øada protokolù (napø. HTTPS na portu 443)
+    Princip:
+    1. Klient pošle poadavek na SSL spojení + parametry.
+    2. Server pošle odpovìï + parametry + certifikát serveru. 
+    3. Klient ovìøí server a vygeneruje základ šifrovacího klíèe, 
+    zašifruje ho veøejnım klíèem serveru a pošle mu ho. 
+    4. Server rozšifruje základ šifrovacího klíèe. Z tohoto základu 
+    vygenerují jak server, tak klient hlavní šifrovací klíè. 
+    5. Klient a server si navzájem potvrdí, e od teï bude jejich 
+    komunikace šifrovaná tímto klíèem
+    
+%VRSTVY OSI
+Oznaète nepravdivé tvrzení ohlednì vrstevnaté struktury sítí.
+    pravda
+    Snazší dekompozice a popis, zmìna technologie – 
+    rozdìlení práce mezi vrstvy ISO/OSI 
+
+Jak spolupracují vrstvy vertikálnì?
+    Pøedávají si navzájem data+øídící informace vyšší vrstvy do nisí 
+    (encapsulation) pøíjemce v opaèném smìru postupnì rozbalí, 
+    kadá se stará o odlišnou èást, dohromady uskuteèní proces
+    
+Oznaète úkol, kterı není pøedmìtem èinnosti ádného protokolu transportní vrstvy.
+    co je pøedmìtem
+    (TCP/UDP) zodpovídá za end to end pøenos dat, 
+    zprostøedkovává sluby sítì aplikaèním protokolùm, které mají rozdílné nároky na pøenos, 
+    umoòuje provoz více aplikací na uzlu volitelnì: spolehlivost pøenosu dat, 
+    segmentuje data pro snazší pøenos/zpìtnì skládá, 
+    øídí tok dat
+    
+Jaké je správné poøadí vrstev OSI modelu od nejvyšší po nejniší?
+    Aplikaèní, prezentaèní, relaèní, transportní, síová, linková, fyzická
+    
+K èemu se pouívají porty v OSI 4?
+    Aby OS mohl pøedávat aplikacím data, o která ádají 
+    - nevìdìlo by se komu data patøí. 
+    Port je "èíslo aplikace".
+    
+Oznaète termín, kterı není funkcí síové vrstvy.
+    je funkcí
+    zajišuje pøenos datovıch blokù s promìnlivou, ale omezenou délkou (pakety) mezi dvìma uzly, které se mohou nacházet v rùznıch sítích. 
+    <b>Pokud je zdrojovı a cílovı uzel ve stejné síti, síová vrstva pouze pøedá poadavek na pøenos linkové vrstvì</b>. 
+    Pokud jsou v rùznıch sítích, síová vrstva je zodpovìdná za nalezení cesty a smìrování dat pøes mezilehlé uzly.
+    
+Jakı protokol poskytuje na síové vrstvì slubu spolehlivého pøenosu dat?
+    !!!pozor - ádnı takovı v prezentaci není - tcp je pøece v transportní
+    
+Jakı protokol poskytuje na síové vrstvì slubu nespolehlivého pøenosu dat?
+    IP
+    
+Která vrstva OSI pracuje s IP adresami?
+    síová
+    
+Oznaète pravdivé tvrzení o vztahu linkové a fyzické vrstvy v OSI a TCP/IP.
+    TCP/IP se jimi vùbec nezabıvá XD
+    bere je jako síové rozhraní
+    
+Jakı typ adres se pouívá na linkové vrstvì?
+    MAC
+
+Jakı typ adres se pouívá na fyzické vrstvì?
+    ádné
+    
+Se kterou vrstvou OSI je svázán pojem Ethernet?
+    Linková = 2.
+    
+%TCP/IP
+Co patøí mezi úkoly aplikaèní vrstvy v TCP/IP modelu?
+    Spojuje Aplikaèní, prezentaèní, relaèní OSI modelu, 
+    pravidla komunikace mezi klientem a serverem, 
+    stav dialogu, 
+    interpretaci dat/definuje: prùbìh zpracování na obou stranách, 
+    formát zpráv (text/binární, struktura), 
+    typy zpráv, sémantika zpráv a informaèních polí, 
+    varianty prùbìhu dialogu, 
+    interakci s transportní vrstvou
+    
+Co nepatøí mezi úkoly síové vrstvy v TCP/IP modelu?
+    patøí
+    pøenos dat pøedanıch transportní vrstvou od zdroje k cíli, 
+    Adresace – protokol definující tvar a strukturu komunikaèních adres partnerù, 
+    Encapsulation – zapouzdøení – data (+IP src/dst, typ) zapouzdøena do PDU, 
+    Routing – smìrování = vyhledání nejvhodnìjší cesty k cíli pøes mezilehlé sítì, 
+    Forwardování – pøeposílání = pøedání dat ze vstupního síového rozhraní na vıstupní, 
+    decapsulation, NAT (IP masquerading), ARP, RIP, ICMP, Ping, TTL
+    
+Jakım zpùsobem se v aplikaèních protokolech TCP/IP øeší zápis textovıch øádek?
+    Dvojice speciálních znakù, promìnlivá na OS. Win CR LF, Mac CR, Linux LF
+    carriage return, posun dolù
+    
+Jakım zpùsobem se v aplikaèních protokolech TCP/IP obvykle øeší binární zápis celıch èísel?
+    Poøadí bytù – big endian (1 = 0x00, 0x00, 0x00, 0x01) 
+    ale Intel má little endian (1 = 0x01, 0x00, 0x00, 0x00)
+    
+Kterı z následujících protokolù se pouívá v TCP/IP na transportní vrstvì?
+    TCP A UDP
+    
+Kterı z následujících protokolù není protokolem aplikaèní vrstvy TCP/IP?
+    JSOU: FTP, HTTP, SMTP, DNS, SIP, NFS, XDR, RPC
+    
+Kterı z následujících protokolù se pouívá v TCP/IP na aplikaèní vrstvì?
+    JSOU: FTP, HTTP, SMTP, DNS, SIP, NFS, XDR, RPC
+    
+Se kterou vrstvou TCP/IP je svázán pojem port?
+    transportní osi4
+
+%TCP A UDP
+Co se stane, kdy jeden z partnerù pošle TCP paket s FIN pøíznakem?
+    Klient odešle datagram s nastavenım pøíznakem FIN (odteï nesmí jít ádná další data z klienta)
+    Server odpoví datagramem s nastavenım pøíznakem ACK
+    Server odešle datagram s nastavenım pøíznakem FIN
+    Klient odpoví s nastavenım pøíznakem ACK
+    Tím je spojení ukonèeno
+    
+Pokud TCP pakety dorazí v nesprávném poøadí, co se stane?
+    Sequence number = pøíjemce si pakety srovná (na transportní vrstvì)
+    
+Pokud UDP pakety nedorazí ve správném poøadí, co se stane?
+    Pøíjemce mùe a nemusí srovnat na aplikaèní vrstvì 
+    (programátor mùe poøadí vloit do „dat“ podle nich aplikace mùe srovnat, jinak implicitnì v UDP protokolu není)
+
+Jakou informaci najdeme v záhlaví TCP i UDP?
+    Destination Port, Source Port, Checksum, Data
+    
+Které tvrzení popisuje správnì TCP resp. UDP?
+    TCP segmentuje data na menší bloky, odesílá je v jednotlivıch 
+    paketech, potvrzuje jejich úspìšné doruèení, v pøípadì selhání je znovu 
+    odesílá a nakonec vrací øízení aplikaci s úspìšnım nebo neúspìšnım 
+    vısledkem. Implementace TCP je proto velmi sloitá, zato implementace 
+    aplikace je snadnìjší. Nevıhodou tohoto pøístupu je, e aplikace ztrácí 
+    kontrolu nad celım procesem, nemùe prunì reagovat na aktuální stav 
+    sítì. Prostì jen zavolá funkci a èeká
+
+    UDP – pro nespojované sluby, neexistuje „spojení“, 
+    data jsou nezávislé zprávy, 
+    UDP jednoduché – musí øídit aplikace, (pravidelnı tok za cenu vyšší ztrátovosti)
+    
+Která charakteristika TCP není správná?
+    pravda
+    pouití pro spojované sluby, 
+    klient naváe spojení – data teèou ve formì proudu (streamu), 
+    spojení (relaci) øídí TCP nikoliv aplikace, 
+    má velkou reii, je komplikované, (pøíp. ménì pravidelné ale bezeztrátové)
+    
+Jaké postupy pouívá TCP, aby zajistilo spolehlivost pøenosu?
+    Pøijímající strana posílá ACK na data, která dostala ACK (èíslo které oèekává). 
+    100 101 102 103 ... <- ACK 104 (chci 104ku), 
+    pouívá sekvenèní èíslo k identifikaci všech odeslanıch packetù, popoøadì. 
+    Zasílá kontrolní souèet u kadého packetu, aby se popø. dalo poznat, e je packet poškozenı.
+    
+    
+Kterı parametr datového pøenosu urèuje, jakı rozsah dat mùe stanice poslat, ani musí èekat na potvrzení protistrany?
+    „windowing“ = potvrzení nejpozdìji kadého n-tého packetu (místo kadého) = klient èeká na odpovìï po odeslání n packetù – „všechny v téhle sadì dorazily, mùes poslat další sadu“
+     
+    
+Co usoudíme z (kompletního) vıpisu programu netstat -an?
+    Zobrazí vıpis všech aktivních spojení TCP a UDP a porty na kterıch naslouchají spuštìné procesy 
+    -an v pøíkazu: IP adresy v Foreign adress v èíselné podobì 
+    – není pouit reverzní pøevod pomocí DNS na jména 
+    Proto, Local Adress, Foreign Adress, State
+    
+Co se odehrává bìhem three-way handshake?
+    pøipojení klienta na server pøes TCP, synchronizase seq num
+    Client ----[SYN = 1, Seq_number = c,     ACK = 0    ]----> Server
+    Client <---[SYN = 1, Seq_number = s,     ACK = c + 1]----- Server
+    Client ----[         Seq_number = c + 1, ACK = s + 1]----> Server
+    
+Jakou informaci obvykle volí dynamicky klient, jen se chystá navázat spojení na server?
+    Seq# nebo zdrojovı port
+    
+%IP ADRESY
+Která z charakteristik IP filtrování je správná?
+    Router na perimetru obsahuje informace o tom, jaké IP adresy propouští.
+
+    Pøísná konfigurace: 
+    ven vybrané, dovnitø nic 
+    (dobré pro protokoly s jedním kanálem HTTP/SMTP), 
+    problém u protokolù s více kanály (FTP/SIP)
+
+    Obvyklá konfigurace: 
+    ven cokoliv, dovnitø nic – 
+    problém tøeba s aktivním FTP pøenosem, 
+    nepouitelné u protokolù s více kanály (SIP), 
+    problém se slubami „uvnitø“ (www server, pošta) 
+    – lepší oddìlenı segment=demilitarizovaná zóna
+
+    IP filtrování typicky vyuívá vyšších vrstev ne jen síové.
+
+Oznaète nepravdivé tvrzení o pøidìlování IP adres.
+    pravda:
+    Centrální IANA, regiony RIR (5x, náš RIPE NCC), dále ISP, 
+    v lokální síti: lokální správa (automaticky nebo ruènì)
+    
+Oznaète nesprávnou variantu, jak poèítaè mùe zjistit IP adresu, kterou smí pouívat.
+    pravda:
+    DHCP, link local adresy, administrátorem pøidìlena manuálnì
+    
+Kolik bitù má IPv6 adresa?
+    128
+    
+Jak odesílatel zprávy zjistí, jaká èást cílové IP adresy pøísluší síti a jaká poèítaèi?
+    Podle masky – jednièky v ní = èást IP adresy urèující sí,
+    <b>poèet jednièek je to èíslo za lomítkem</b> 
+    0 = èást IP adresy pro poèítaè 
+    Pøíklad: 192.168.100.1/16, tedy maska je 255.255.0.0 › 192.168. je èást IP adresy urèující sí
+
+Jaká IPv4 adresa má v èásti pro poèítaè samé jednièky?
+    network broadcast, všem v této síti, nesmí opustit sí
+    
+Které tvrzení o typech IP adres je pravdivé?
+    Implicitní/Subnetting rozšíøením síové èásti adresy (pomocí síové masky), 
+    classless mód (rùzné masky = variable length subnet mask VLSM) (Supernetting), 
+    speciální adresy by design/definition
+
+    IPV6
+    Unicast – zasílání paketù pouze jedinému cíli (uzlu/stanici)
+    Multicast – Posláno na IP adresu cílové skupiny 
+    (poslána ale jen jediná zpráva ta dorazí všem v dané skupinì – místo vysílání stejné zprávy všem jednotlivcùm)
+    Loopback - 127.0.0.1/8 - packety, co jsou sem poslány jdou ihned zpìt jako pøíchozí.
+    nemá broadcastovou jsou de facto nahrazeny multicastovou adresou ff02::1 („All IPv6 devices“).
+    ale má anycastové
+    
+    IPV4
+    - this host (smí bıt pouita pouze jako zdrojová): 0.0.0.0/8
+    • adresa rozhraní s dosud nepøiøazenou adresou
+    – loopback (RFC 1122): 127.0.0.1/8
+    • adresa lokálního poèítaèe, umoòuje vytvoøení smyèky
+    – adresa sítì: <adresa sítì>.<samé nuly>
+    – network broadcast (RFC 919): <adresa sítì>.<samé jednièky>
+    • „všem v dané síti“, normálnì se doruèí do cílové sítì
+    – limited broadcast (RFC 919): 255.255.255.255
+    • „všem v této síti“, nesmí opustit sí
+
+Za pøedpokladu pouití implicitních síovıch masek oznaète nesprávnì klasifikovanou IP adresu.
+    èíslo, které obsahuje jednièky právì na místech, kde je adresa sítì
+    
+Kterı z následujících protokolù nepracuje s IP adresami?
+    pracují protokoly na síové vrstvì nebo i tøeba DNS a FTP (Smìrovací protokoly, Link State, ARP, IP)
+
+Které pole IP záhlaví brání vzniku nekoneèné smyèky pøi doruèování?
+    TTL
+
+Jaké pole IP záhlaví za normálních okolností mìní router?
+    TTL  (pro sítì za NAT = zmìna port/IP/MAC))
+    
+Vyberte správné tvrzení o úèelu nebo pouití pole IP záhlaví oznaèovaného jako TTL (Time To Live).
+    brání vzniku nekoneèné smyèky pøi doruèování
+    udává poèet hopù, kterí smí paket ještì pøeskoèit, pøi dosazení 0 se posílá ICMP Time Exceeded
+
+
+%OBECNÌ ADRESY
+Která z charakteristik pøekladu adres (NAT) je správná?
+    IP Masquerading, 
+    router na perimetru privátní sítì „pøekládá“ privátní adresy na veøejné 
+    (nebo jiné privátní ve vnoøenıch sítích), router pøepíše IP source na svou vlastní 
+    a port na nìkterı ze svıch volnıch –
+    kdy pøijde odpovìï zpìt v tabulce zjistí podle portu 
+    na kterı pøišla, na jakı port a IP v síti má data poslat (viz slide 36)
+
+Co oznaèuje termín MAC (Media Access Control)?
+    Podvrstva linkové vrstvy, má na starosti adresaci uzlù a kontrolu pøístupu k médiu 
+    – kdo, kdy jak mùe data odesílat a jak je pøijímat
+
+Oznaète pravdivé tvrzení tıkající se MAC adres (ve fungující síti).
+    Pøíkladem MAC adres jsou 
+    ethernetové adresy. Jsou šestibajtové a skládají se z prefixu vırobce (3 bajty) a èísla 
+    síové karty (3 bajty). Pùvodnì bıvaly adresy vypálené do karty, take bylo moné 
+    efektivnì omezit pøístup k síovım prostøedkùm pomocí MAC adresy odesílatele. 
+    Souèasné síové karty však mají adresu MAC uloenou v pamìti, a proto ji lze 
+    snadno zfalšovat. Vzhledem ke své povaze nelze tyto adresy pouít pro komunikaci 
+    mezi rùznımi sítìmi, protoe nerespektují ádnou konkrétní topologii sítì
+    
+V jakém pøípadì není nutná adresace cílového poèítaèe?
+    Broadcast/Multicastová adresa
+
+
+%DOMÉNOVÁ JMÉNA A TAK
+Které tvrzení o bezpeènostních aspektech protokolu DNS je správné?
+    zaloena na tom, e pro potenciálního útoèníka není úplnì 
+    snadné se dostat ke znìní dotazu, aby mohl podvrhnout odpovìï. 
+    Pokud dokáe napadnout a odposlouchávat lokální sí, je útok monı. 
+    Pokud ale dotaz opustí lokální sí, je smìrován mezi síovımi routery 
+    a k cílovému serveru, a tam se ji k dotazu dostane obtínì. 
+    Druhou variantou je dotaz oèekávat, odhadnout jeho znìní 
+    a poslat falešnou odpovìï.
+    
+    cache poisoning útok 
+    Útoèník legálnì provozuje server pro nìjakou doménu a donutí 
+    klienta, aby mu poslal DNS dotaz (napø. vábivou reklamou ve spamu). 
+    Dotaz obsahuje korektní odpovìï (tím je útok záludnìjší), 
+    ale v sekci AUTHORITY útoèníkùv server podvrhne tøeba informaci o tom, 
+    e server pro doménu cz je rovnì tento útoèníkùv server. 
+    Pokud je klient naivní, uloí si tuto falešnou informaci do 
+    cache a od té chvíle získá útoèník kompletní kontrolu nad dotazy smìøujícími do 
+    domény cz z daného klienta (nebo hùø – z celé sítì).
+
+    
+Které z následujících tvrzení o povaze DNS protokolu je správné?
+    sluba pro pøeklad doménovıch jmen na adresy a naopak
+    Ve skuteènosti poskytuje ještì další informace o uloenıch doménovıch 
+    jménech, ale dotazy na IP adresy jsou nejfrekventovanìjší
+    vìtšinou UDP, pokud potí, pak TCP
+    
+    Protokol je binární, kadá zpráva obsahuje hlavièku a pak urèitı poèet záznamù 
+    nazıvanıch resource record (RR). Kadı záznam obsahuje jméno, dobu platnosti 
+    v sekundách (time-to-live, TTL), typ záznamu a odpovídající data
+    
+    typ záznamù - start of authority, nameserver, A(ipv4), AAAA(ipv6), 
+    PTR - reverzni zaznam na prevod adres na jmén
+
+Oznaète správné tvrzení o nameserverech.
+    Primární – spravuje záznamy o doménì, 
+    sekundární – stahují a uchovávají kopii dat o doménì, 
+    Caching-only – udruje jen (ne)vyøešené dotazy po dobu platnosti, 
+    kadá doména alespoò jeden, lépe více autoritativních NS 
+    (primární/sekundární), pro vımìnu dat TCP, 
+    formát dotazu a odpovìdi je ale DNS RR, 
+    aktualizace vyvolává sekundární server (v intervalech?) 
+    ale je moné vyvolat v pøípadì potøeby pøímo primárním serverem.
+    
+Jakou TLD (Top Level Domain) najdeme v následujícím URI? ftp://sunsite.mff.cuni.cz/Network/RFCs/rfc-index.txt
+    .cz
+
+Které z následujících tvrzení o doménovıch jménech je pravdivé?
+    Zleva od nejkonkrétnìjší po nejobecnìjší oddìlené teèkami, 
+    poslední = TLD, niší spravuje vlastník 
+    nejvyšší úroveò spravuje ICANN (.cz - CZ.NIC)
+
+
+%FTP
+Které tvrzení o povaze FTP protokolu je správné?
+    Port 21 command, 20 na pøenos dat, je nešifrovanı, 
+    pouívá se spíše na anonymních serverech, 
+    pasivní a aktivní spojení kvùli firewallùm, 
+    mono vyvolat Third Party Transfer
+    
+Které z následujících tvrzení o bezpeènostních problémech FTP je správné?
+    Heslo se pøenáší otevøenì. 
+    Pouívá se jen tam, kde nehrozí nic bezpeènostního 
+    (anonymní pøístup k serveru). - k volnì šiøitelnım datùm (heslo=email apod.)
+
+Pokud FTP klient pošle pøíkaz na FTP server na standardním portu, jakı z.následujících portù mùe obsahovat odpovìï jako zdrojovı?
+    21 – odpovìï na pøíkaz, 20 pøi aktivním pøenosu
+
+Kterı aplikaèní protokol se pouívá k pøenosu souborù?
+    FTP, SSH
+
+
+%ELEKTRONICKÁ POŠTA
+Kterı aplikaèní protokol se pouívá pro elektronickou poštu?
+    SMTP port 25, POP3, IMAP
+
+Které z následujících tvrzení o roli jednotlivıch komponent v pøenosu elektronické pošty je pravdivé?
+    Mail-Forwarder, mail transfer agent, mail user agent
+    mail exchanger MX
+    POP/IMAP – protokoly pro pøístup (získávání zpráv) k poštovní schránce, 
+    SMTP pro best effort (delivery only!) doruèování zpráv
+
+Které z následujících tvrzení o pouívání poštovních protokolù je správné?
+    Na základì SMTP(25), pøímo, ale jen odesílání, textovı, velmi starı, nešifrovanı
+    nebo vzdálenı pøístup pøes POP3(110)/IMAP(143), 
+    POP starší 
+    – otevøenı pøenos hesla, 
+    dopisy lze stahovat jen celé, 
+    není moná práce se strukturou dokumentu, 
+    IMAP 
+    monost šifrovaného spojení, 
+    podpora více stránek (sloek), 
+    monost vyádat jen èást dopisu, 
+    monost vyhledávat v dopisech, 
+    paralelní pøíkazy, server uchovává informace (stav) o dopisech.
+
+Které z následujících tvrzení o SMTP protokolu je správné?
+    DSN - delivery service notification
+    -zpráva, e mail nebyl doruèen
+    - generuje MTA, kterı pøijal a nedoruèil
+    - obèas se vyuívá pøi spamu pro svùj snadnı prùchod
+    
+    konec data - øádek pouze s teèkou
+    
+Které tvrzení o rozšíøeních protokolu SMTP pro pøenos souborù a diakritiky je správné?
+    Pùvodnì 7-bit ASCII, 
+    kódování souborù pomocí UUENCODE (z UUCP unix-to-unix-copy) 
+    = kódování ok ale chybìlo systematické zaèlenìní do dopisu 
+    dnes rozšíøené Multipurpose Internet Mail Extension (MIME) 
+    – umoòuje strukturovat dokument, 
+    pro kadou èást zadat: typ a formát obsahu, znakovou sadu a kódování, 
+    mono pracovat s pøílohami obsahujícími soubory
+    další info k zpracování a pouívat diakritiku – i v nìkterıch hlavièkách. 
+    
+    Base64 pocházející z UUENCODE (jiná tabulka a formát øádek), 
+    Quoted-Printable – nonASCII znaky uloeny jako øetìzce. 
+    MIME dnes pouíván hodnì i mimo poštu.
+
+Oznaète hlavièku, která se dle RFC 822 v dopisech nevyskytuje.
+    Vyskytuje se: Date, From, Sender, Reply-To, To, Cc, Bcc, Message-ID, Subject, Received
+
+Kterı pøíkaz není pøíkazem SMTP protokolu podle RFC 821?
+    HELO (Pozor EHLO má novìjší ESMTP!), MAIL FROM, RCPT TO, DATA, QUIT
+    
+Které tvrzení o bezpeènostních aspektech poštovních protokolù je správné?
+    místo jména úètu pøed @ alias, za ním místo jména serveru jméno domény/sluby
+    
+Které tvrzení o autenticitì pùvodu dopisu je správné?
+    Dopis je otevøená listovní zásilka
+    øešení šifrováním obsahu, napøíklad pomocí PGP – Pretty Good Privacy 
+    Nikdy není jistı odesilatel, ani shoda údajù v obálce a textu 
+    øešení: Sender policy framework
+    =pokus o zpìtné doruèení, nebo systémem vızva/odpovìï, elektronickım podpisem 
+    › neotevírat dopisy neznámého pùvodu, 
+    server mùe vyadovat autentikaci odesilatele pomocí ESMTP – pøíkaz AUTH, 
+    nebo klient pomocí ESMTP pøíkazu STARTTLS ádat o spojení pomocí SSL/TLS 
+    (šifrování je jinak obecnì problémem uivatele ne serveru)
+
+
+%ROUTOVÁNÍ  A SÍ
+Jakı úèel plní default gateway?
+    Kdy poèítaè nezná cestu k danému IP (v lokální síti), 
+    vyšle packet na default gateway (router) – ten propojuje sítì take packet pøes nìj bude poslán dál
+
+Pokud má poèítaè špatnì nastaven defaultní router, co nebude moci?
+    zprávy vysílat jinam ne do své podsítì (a ani pøíjmat TCP spojení)
+    
+Co se stane, pokud cíl není nalezen v routovací tabulce?
+    paket je zahozen, ICMP No route to host
+    
+Které tvrzení o metodách øízení smìrovacích tabulek je pravdivé?
+    Statické 
+    – cesty se navazují pøi startu 
+    nepruné pøi zmìnách, problémy se subnettingem, nesnadné zálohování spojení
+    ménì citlivé na problémy v síti, dostupné i ve zcela heterogenním prostøedí 
+    › vhodné pro jednodušší stabilnìjší sítì 
+    Dynamické 
+    – routery si navzájem vymìòují informace o síti pomocí routovacího protokolu 
+    jednoduché zmìny konfigurace, sí se dokáe sama „opravovat“, smìrovací tabulky se udrují automaticky
+    citlivìjší na problémy/útoky, na poèítaèi musí bìet program obsluhující protokol (routed, gated, BIRD a pro lokální sítì napø. RIP a OSPF)
+
+Oznaète pravdivé tvrzení o distance-vector routovacích protokolech.
+    Uzel má u záznamù ve smìrovací tabulce i „vzdálenost“
+    svou tabulku periodicky posílá sousedùm, ti si upraví svou tabulku a v dalším taktu ji posílají dál
+    jednoduché,snadno implementovatelné
+    pomalá reakce na chyby, metrika špatnì zohledòuje vlastnosti linek (rychlost, spolehlivost, cenu)
+    chyba ve vıpoètu jednoho routeru ovlivní celou sí – vznik routovacích smyèek
+
+Oznaète pravdivé tvrzení o link-state routovacích protokolech.
+    Kadı router zná „mapu“ celé sítì
+    routery si navzájem sdìlují stav svıch linek a podle toho si kadı modifikuje mapu své sítì 
+    nároènìjší na vıkon CPU a pamì, pøi startu na nestabilních sítích mùe vımìna dat znamenat velkou zátì sítì
+    prunì reaguje na zmìny topologie, kadı poèítá sám za sebe, chyba neovlivní ostatní
+    sí je moné rozdìlit na menší podsítì (rychlost vıpoètu), vımìna dat probíhá pouze pøi zmìnách.
+
+Jakou informaci z paketu pouívá kadı smìrovaè pro urèení cesty?
+    IP adresu cíle
+    
+Oznaète existující pole (sloupec) routovací tabulky.
+    Network Destination, Netmask, Gateway, Interface, Metric
+    
+Jakım pøíkazem mùeme vypsat obsah routovací tabulky?
+    netstat -r
+
+Defaultní router pro nìjakou sí má adresu 172.31.219.33/27. Které z následujících nastavení mùe bıt v této síti správnou adresou poèítaèe?
+    dohromady 32 adres - ___.33 znamená, e za poslední teèkou první tøi èísla (protoe takové pozice mají jednièky podle masky 27-3*8) dávají 33, take nás zajímají další èísla, tìch pìt, tam jsou monosti 0-31, tedy 32 moností
+    validní adresy tedy budou v rozsahu 172.31.219.33 to 172.31.219.62, protoe ta poèítaèová se jakoby pøiète, nprodlouí binární èíslo
+    
+Které tvrzení o smìrování je pravdivé?
+    Mìla by umìt kadá stanice v TCP/IP síti
+    maska vyjadøuje uvaovanou èást adresy cíle
+    direct – pøímo pøipojená sí (gateway = vlastní adresa)
+    indirect, default
+    záznam implicitní – automaticky po pøiøazení adresy do rozhraní
+    explicitní – ruènì zadán pøíkazem
+    dynamickı – v prùbìhu práce od partnerù v síti
+    
+Vyberte správné tvrzení o principu smìrovacího algoritmu.
+    Ve smìrovací tabulce se vyhledají všechny záznamy, které se shodují s cílem paketu.
+    Vyhledání všech shodujících se záznamù s cílem paketu ve smìrovací tabulce
+    nebyl ádnı záznam nalezen -> paket nelze doruèit, je zahozen 
+    Tento pøípad ale mùe nastat <b>pouze tehdy,pokud sm tab nemá default</b>
+    
+    Z nalezenıch záznamù se vybere ten nejspeciálnìjší, ten s nejširší maskou. 
+    Pokud nic nevyhovuje, pouije se default.
+    
+    Záznam <b>odkazuje na náš vlastní poèítaè</b> (loopback) -> paket se zaøadí na vstup, jako by právì pøišel ze sítì.
+    Nalezenı záznam <b>je pøímı</b> (v naší síti), paket se pøímo pøedá linkové vrstvì k odeslání pøíjemci.
+    Nalezenı záznam <b>je nepøímı</b>, paket se pøedá linkové vrstvì s pøíkazem poslat ho next-hop routeru
+
+Jaké kroky musí udìlat klientskı poèítaè, aby správnì odeslal paket v pøípadì, e cílovı server není ve stejné síti?
+    Vyslat ARP request aby zjistil MAC adresu routeru 
+    – poté packet co chtìl odeslat je vyslán pøes router podle jeho smìrovací tabulky 
+    (pøedtím poèítaè nezná adresu routeru proto ARP request)
+
+Vyberte správné tvrzení o èinnosti routeru.
+    Router (smìrovaè) je v poèítaèovıch sítích aktivní síové zaøízení, které procesem zvanım routování pøeposílá datagramy smìrem k jejich cíli. Routování probíhá na tøetí vrstvì referenèního modelu ISO/OSI (síová vrstva). Router spojuje sítì (pozor: switch spojuje poèítaèe v místní síti = rozdíl)
+
+Které tvrzení správnì popisuje obvyklou implementaci sluby operaèního systému "zjisti IP adresu pro dané doménové jméno"?
+    DNS 
+    - rekurzivnì se ptám serveru (nastavenı uivatelem), 
+    ten nerekurzivnì vyšších serverù, 
+    vdy odpovìï na co nejkonkrétnìjší èást „zadání“ - pak by u stejnì nemìl co øíct
+ 
+Jak budou vypadat zdrojové a cílové IP a MAC adresy paketu poslaného z notebooku na server na trase mezi routerem A a B?
+    Vzhledem k ARP: Zdrojová: IP notebooku, MAC routeru A, 
+    cílové MAC routeru B, IP Serveru
+    
+Jak budou vypadat zdrojové a cílové IP a MAC adresy paketu poslaného jako odpovìï serveru na poadavek z notebooku pøi prùchodu podsítí oznaèenou III?
+    pokud není router, pak prostì zdrojová a cílová
+    
+Vyberte správné tvrzení o úèelu a principu programu ping.
+    vyuívá ICMP zprávy ECHO A ECHO REPLY
+    základní prostøedek diagnostiky sítì -> testujeme dostupnost vzdáleného uzlu
+    pøi zavolání periodicky (1s) vysílá ICMP Echo
+    -dostane reply -> vypíše info o délce trvání
+    ovìøíme jen, jestli pakety dojdou k cíli, ne jestli bude opravdu odpovídat a komunikovat na aplikaèní sluby
+    mùe naopak odpovídat ani by prošel ping - tøeba zakázané ICMP Echoreply, nebo tyto zprávy odstranil router na cestì
+    
+Co mùeme usoudit, pokud zavoláme program ping na adresu 127.0.0.1 s vısledkem: 
+4 packets transmitted, 0 packets received, 100.0% packet loss
+    tøeba zakázané ICMP Echoreply, nebo tyto zprávy odstranil router na cestì
+    na ádnı ICMP datagram nepøišla odpovìï, na poèítaèi mùe bıt blbì nainstalovanı IP software
+    
+Uivatel pøesunul poèítaè do jiné podsítì v síti bez VLSM (Variable Length Subnet Mask) a Proxy ARP. Které znásledujících nastavení bude muset zcela jistì zmìnit?
+    IP
+    
+Která z charakteristik proxy serveru je správná?
+    software na routeru (transp.) nebo i separátní server (mùe v netransp.)
+    stíní klienta pøímo od serveru - funguje jako prostøedník 
+    Správce sítì mùe kontrolovat èinnost klientù popø. omezit objem provozu na pøípojné lince…
+    Transparentní 
+    SW na routeru, zachytí a uloí poadavek, svım jménem naváe spojení dál (stejnì opaènì) – není tøeba konfigurovat
+    Netransparentní 
+    je tøeba nakonfigurovat aby se poadavky neposílaly pøímo, ale na proxy-server v lokální síti (nemusí bıt router), je nutná podpora protokolu
+
+Které zaøízení/prostøedek implementuje bezpeènostní politiku lokální sítì vùèi internetu?
+    Router/Firewall/Proxy server
+    
+Které tvrzení o topologii sítì je pravdivé?
+    Topologie sítí = zapojení rùznıch prvkù do sítì a zachycení jejich reálné a logické podoby 
+    „tvar/struktura sítì“ › Point-to-point/Multipoint (Sbìrnice, hvìzda, Kruh)
+    
+Které tvrzení o ARP je pravdivé?
+    Konverze MAC a IP adres, neznámá adresa se zjišuje broadcastovou vızvou
+    osi 3 a 2
+    vısledky se ukládají do ARP cache (odpovídající si pøidává informace o tazateli)
+    nejde ovìøit pravost/správnost odpovìdi
+    neopouští lokální sí, mùu dostat i nevyádanì (gratious), arp -a
+     
+Které tvrzení charakterizuje Dijkstrùv algoritmus?
+    Open Shortest Path First je interní link state protokol ve kterém se Djikstra pouívá k nalezení nejkratší cesty (v grafu)
+    Jinı protokol <b>RIP ho nepouívá</b>
+    Maximum prùchodù = poèet vrcholù
+    Je potøeba ho vdy celı pøepoèítat kdy se pøidá nová hrana/vrchol
+    
+Oznaète pravdivé tvrzení o autonomních systémech (AS)?
+    Blok sítí se spoleènou routovací politikou, zavedeny pro snazší routování na globální úrovni 
+    – externí routovací protokoly EGP – dnes pouívanı Border Gateway Protokol BGP
+    
+%HYPERTEXT, WEB ATD
+Jak oznaèujeme protokol, kterım se pøenášejí webové stránky?
+    HTTP hypertext transfer protocol
+    
+Co oznaèuje zkratka HTML?
+    hypertext markup language
+    
+Které tvrzení o povaze HTTP protokolu je správné?
+    Port 80, typicky TCP
+    Formát zprávy: 
+    úvodní øádka (poadavek/odpovìï), 
+    doplòující hlavièky
+    poadavek: jazyk, kódování, stáøí stránky, autentikace, 
+    odpovìï: typ dokumentu, kódování, expirace
+    volitelné: tìlo dokumentu
+
+    1xx informativní odpovìï (poadavek pøijat, probíhá zpracování)
+    2xx kladná definitivní odpovìï
+    3xx pøesmìrování (oèekáván poadavek od klienta)
+    4xx chyba na stranì klienta (nesprávnı poadavek)
+    5xx chyba na stranì serveru (nepodaøilo se vyhovìt poadavku)
+
+    Odpovìï na jeden poadavek je obvykle jeden dokument, 
+    po jednom perzistentním spojení mùe jít postupnì více poadavkù, 
+    klienti si vìtšinou otevírají více spojení 
+    Poadavky jsou nezávislé, komunikace je bezestavová, 
+    stav je pøenášen dodateènımi daty cookies
+
+Která z následujících metod ("pøíkazù") existuje v HTTP protokolu?
+    GET, POST, PUT, HEAD, DELETE, TRACE, OPTIONS, CONNECT, PATCH
+    
+Které tvrzení o monostech autora ovlivnit dynamickou povahu stránek je nesprávné?
+    NEMUSÍ BİT JAVASCRIPT, staèí php ze strany serveru nbo cookies tøeba
+
+Vyberte správné tvrzení o dynamickıch WWW stránkách.
+    generované serverem tøeba na zákl cookies:
+    php, perl, python atd
+    pøímo klientem:
+    Javascript
+    
+Pokud www prohlíeè pošle dotaz na www server na standardním portu, jakı z.následujících portù mùe obsahovat odpovìï jako zdrojovı?
+    80    
+
+Uivateli nejde zobrazit WWW stránka. Pøi pouití IP adresy v URL se stránka správnì zobrazí. Kterı protokol je zodpovìdnı za chybu?
+    DNS - špatnì urèuje IP
+
+Jakı krok následuje poté, co www server pøipraví text stránky, rozdìlí ho a naformátuje do TCP segmentù?
+    TCP Segment = celá jednotka vytvoøená na transportní vrstvì 
+    => pošle na síovou vrstvu a ta pøidá IP src, IP dst, typ
+    
+Jakı krok následuje poté, co www klient zjistí adresu cílového serveru a pøipraví paket v protokolu IP k odeslání?
+    Pošle do Linkové vrstvy, ta pøipojí mac adresu zdroje a cíle, typ 
+    
+Jakı krok následuje poté, co poèítaè, na kterém bìí www server, pøeète ethernetovı rámec od síové karty?
+    Vybalí z ethernetového rámce 
+    = pøeète mac adresy (linková) – pošle vıše (síová)
+    
+Jaké tvrzení tıkající se cookies je správné?
+    Stav pøenášenı jako dodateèná data: 
+    server napøíklad vygeneruje cookies s identifikací spojení a pošle v hlavièèce klientovi, 
+    ten je pak pøi další komunikaci na danı server pøidá do hlavièek poadavku 
+    (tak to tøeba dìlá PHP s jeho sessions)
+    Cookies si mùe i prohlíeè vymyslet, 
+    nebo mít pøiøazené napøíklad z Javascriptu
+    Mohou obsahovat napøíklad preference (nastavení), 
+    nìjakı token pro autentifikaci pøihlášeného uivatele...
+    
+Jakım zpùsobem klient obvykle pøedává serveru data vyplnìná uivatelem do ovládacích prvkù dialogu?
+    POST (pøímo do tìla requestu, není jednoduše v prohlíeèích vidìt)
+    GET (do URL)
+
+%TECHNICKÉ
+Do hubu jsou zapojeny stanice A, B, C a D. Stanice A je právì uprostøed vysílání rámce stanici D, kdy stanice B potøebuje vysílat data stanici C. Co musí stanice B udìlat?
+    Poèkat ne AD dovysílají – jinak kolize
+    
+Do switche jsou zapojeny stanice A, B, C a D. Stanice A je právì uprostøed vysílání rámce stanici D, kdy stanice B potøebuje vysílat data stanici C. Co musí stanice B udìlat?
+    Odeslat svá data (na nic neèeká)
+
+Které tvrzení o médiích pouívanıch v poèítaèovıch sítích je správné?
+    Metalické (kabel) – elektrické pulzy, Optické – svìtelné pulzy, Bezdrátové – modulace vln
+
+Kolik vodièù obsahuje kabel oznaèovanı jako nestínìná kroucená dvoulinka (UTP)?
+    8
+    
+Jaké tvrzení o kabelech pro propojení dvou uzlù ethernetové sítì je pravdivé?
+    Dnes standardnì UTP – nestínìná kroucená dvoulinka = 4 páry Cu vodièù navzájem zakroucené, 
+    pozor na pøímı/køíenı kabel – dnes obvykle autodetekce, alternativì kabel s kovovım stínìním STP
+
+Jakı je rozdíl mezi jednovidovım (SM) a mnohovidovım (MM) optickım kabelem?
+    Optická vlákna – jednovídová (singlemode) svítí se laserem, vìtší dosah, šíøka pásma, cena 
+    Mnohovídová (multimode) – svítí se led, horèí ne SM kromì ceny
+    
+Jak lze charakterizovat repeater, hub, bridge a switch?
+    repeater 
+    jen opakuje signál a nic o nìm neví - neøeší kolize, mùe ještì zhoršit
+    ve struhturované kabelái se jmenuje hub
+    bridge
+    pracuje na linkové vrstvì, ví, co kam poslat podle MAC adres
+    øeší kolize
+    ve struhturované kabelái se jmenuje switch
+    
+S jakımi adresami pracuje hub, pøepínaè resp. smìrovaè?
+    Hub – ádné, Switch - MAC
+    
+Které z tvrzení o Ethernetu je správné?
+    NENÍ PROTOKOL
+    vùdèí technologie pro lokální sítì, schopná prunì reagovat na progresivní vıvoj HW, pøizpùsobí se širokému spektru pøenosovıch médií, na Multipoint spojích øízení pøístupu pomocí CSMA/CD (na detekci vysílá „jam signál“, exponenciální èekání po 16 pokusech konèí chybou), Adresy – 3 byty prefix (vırobce/multicast), 3 byty adresa, døívì vypálená v kartì dnes nastavitelná
+
+Které tvrzení o WiFi je správné?
+    NENÍ PROTOKOL
+    Bezdrátová sí (WLAN), topologie je hvìzda, mnoho variant – souhrnì IEEE 802.11x (x=a/b/g/n/y)
+
+    SSID (Service set ID): øetìzec 32 znakù pro rozlišení sítí, Struktura: ad-hoc peer-to-peer = dva klienti navzájem rovní, infrastruktura acces pointù = nìkolik AP které vysílají své SSID, WiFi zaøízení dnes všude, problém bezpeènost, (kolize øeší pomocí CSMA/CA)
+
+Co je základní funkcí CSMA/CD?
+    Detekce kolizí – bìhem vysílání uzel souèasnì detekuje pøípadnou kolizi, pøi kolizi zastaví stanice vysílání, upozorní ostatní, poèká urèitou náhodnou dobu a pokus opakuje, obvykle se postupnì prodluuje interval èekání
+
+
+Co oznaèuje zkratka STP  Spanning Tree Protocol ?
+    Protokol pomocí kterého se switche domluví, 
+    kterı z nich nemá forwardovat a bude jen sledovat provoz 
+    = najdou minimální kostru grafu a tím zamezí cyklùm 
+    STP má nezbytné timeouty – start portù je pomalı, 
+    STA lze na portu potlaèit „faststart“
+        Vypuštìní hrany = pøevedení (nìkterıch portù) switche do reimu blocking, kdy se nepøeposílají rámce a switch pouze monitoruje, zda nedošlo k vıpadku druhého switche, kterı je v reimu forwarding
+
+Jaké tvrzení o VLAN je pravdivé?
+    Virtual Lan – prostøedek jak po jedné fyzické síti provozovat více nezávislıch lokálních sítí, sítì oznaèovány 12bitovım identifikátorem (VLANID), Ethernetovı rámec je prodlouen o 32 bitovı tag (tagovat mùe switch, pro koncovou stanici transparentnì)
+
+%TELNET A SSH
+Které tvrzení popisuje správnì problematiku vzdáleného pøihlášení pomocí protokolù telnet a SSH?
+    Telnet (23) 
+    nezabezpeèenı dnes vyuívanı v rámci LAN nebo pøi ladìní jinıch protokolù 
+    – vyuívá síovı virtuální terminál NVT 
+    – protokol pøenáší obìma smìry pøíkazy a odpovìdi ale neumí je rozlišit, 
+    SSH 
+    nejenom ke vzdálenému pøístupu ale obecnì pro secure transfer dat
+    vyuívá šifrování pro bezpeènı pøenos dat
+    
+Které tvrzení o bezpeènosti pøístupu pøes SSH je správné?
+    slouí ke vzdálenému pøihlášení a pøenosùm souborù
+    Na rozdíl od starších protokolù je zaloen na dùsledném ovìøování serveru, 
+    k nìmu se pøipojujeme, a šifrování veškeré komunikace
+    
+    klient ovìøuje server - klíè, certifikát
+    server uivatele - heslo, vızva/odpovìï, veøejnı klíè
+    ovìøovat klíè serveru!! hlavnì pøi jeho zmìnì, nebezpeèí man-in-the-middle
+    Pøihlášení bez hesla se váe na privátní klíè 
+    necháte na serveru veøejnı klíè (místo hesla), 
+    pøi pøipojení zašifrujete nìco co vám dá server privátním klíèem, 
+    server si to vaším veøejnım klíèem rozšifruje a zkontroluje, e to sedí
+    Privátní klíè nikdy nejde pøes sí!
+
+%VOICE OVER IP a SIP
+Kterı aplikaèní protokol (resp. sada protokolù) se pouívá pro VoIP?
+    H.323 na ASN (Abstract syntax notation), 
+    SIP (pouívá RTP/RTCP Realtime Transport Protocol (control) dohodu pomocí SDP (Description) (zabalena v SIP)
+    
+Co oznaèuje pojem VoIP (Voice over IP)?
+    Obecné oznaèení technologií pro pøenos hlasu po IP
+    
+Co oznaèuje pojem SIP (Session Initiation Protocol)?
+    stará se o navázání spojení dvou partnerù pro komunikaci VoIP 
+    jen signalizace (vyhledá partnera, naváe spojení)
+    pøenos dat pomocí RTP/RTCP
+    dohoda o datovıch kanálech øešena SDP (Description) 
+    – jeho data zabalena v SIP
+
+%DALŠÍ PROTOKOLY
+Kterı aplikaèní protokol se pouívá pro sdílení systému souborù?
+    NFS (Network File System), SMB (Server Message Block)
+
+Kterı aplikaèní protokol se pouívá pro zjišování IP adres odpovídajících jménùm strojù?
+    DNS
+    
+Jak funguje protokol DHCP?
+    protokol UDP pro udìllení IP adresy poèítaèi
+    Dynamická alokace adres - nejsou u pevné mac adresy
+    pronájem adresy je èasovì omezen
+    nejèastìjší zpùsob zapojení klienta do sítì
+    
+Jaké funkce plní ICMP (Internet Control Message Protocol)?
+    Posílání øídících informací pro IP, 
+    pouívá IP datagramy (ale není transportním protokolem)
+    Time Exceeded (vypršel TTL) 
+    Redirect, Echo/Echo Reply (testování dosaitelnosti – ping)
+    Parameter problem (chyba v záhlaví datagramu)… 
+    vyhledávání routerù, ádost o sníení rychlosti toku datagramù atdp..
+
+Jakım zpùsobem se synchronizují hodiny na poèítaèích v síti?
+    protokol NTP network time protocol
+    
+Proè se synchronizují hodiny na poèítaèích v síti?
+    Stejné timestampy souborù, monost porovnávání událostí na rùznıch poèítaèích 
+
+%LINKOVÁ VRSTVA
+Co oznaèuje termín LLC (Logical Link Control)?
+    vrstva z osi2,spoleènì s MAC media access control
+    umoòuje rùznım protokolùm síové vrstvy pøístup ke stejnému médiu (multiplexing)
+    
+Co oznaèuje termín CRC?
+    hashovací funkce široce pouívaná pro kontrolu konzistence dat
+    
+Jakı hlavní smysl má zápatí (trailer) linkového rámce?
+    obvykle obsahuje tzv. Frame Check Sequence (FCS), hodnotu, je slouí ke kontrole správnosti doruèení
+    
+Kolikrát probìhne vıpoèet CRC (pro Frame Check Sequence) bìhem pøenosu zprávy mezi koncovımi zaøízeními na obrázku?
+    Tolikrát kolik je zaøízení na dráze pøenosu (zdrojovı PC, kadı router, koncovı PC – na switchi ne)
+
+Které tvrzení o deterministickém a nedeterministickém pøístupu k médiu je pravdivé?
+    Deterministicky 
+    øídí se pravidly bez prvku náhody, jsou nastavena tak, aby v koneèném èase vedla k cíli
+    Nedeterministicky
+    lehèí implementace, nezaruèuje na 100%, e se uzel k médiu dostane
+    
+
+%OSTATNÍ
+Jaká informace se pøidává do paketu bìhem zapouzdøení na síové vrstvì?
+    IP adresa zdroje a cíle, typ
+
+Zvolte nesprávnou definici pojmù segmentace, fragmentace, multiplexing a zapouzdøení.
+    multiplexing
+    pøístup k síti pro rùzná spojení mezi lokálními a vzdálenımi sockety (klienty i servery)
+    Rozlišení jednotlivıch komunikaèních kanálù se dìje prostøednictvím portù
+    
+    segmentace
+    posílání dat po enších blocích a kontrola, zda dorazily všechny, pak sloení
+    
+    fragmentace
+    postup, kdy síová vrstva dostane k doruèení paket dlouhı tak, 
+    e pøi jeho zapouzdøení by vznikl rámec delší ne maximální povolená délka pro danou linkovou vrstvu
+    V takovém pøípadì musí síová vrstva paket fragmentovat na více datagramù a poslat je postupnì. 
+    Fragmentace pøedstavuje zbyteènou komplikaci, pokud se jí lze vyhnout. 
+    To je pøípad TCP, které samo data dìlí (segmentuje), take by staèilo zjistit správnou velikost segmentu, kterou má 
+    pouít. 
+    
+    zapouzdøení
+    data+øídící informace vstvy n+1 do n
+
