@@ -1,0 +1,114 @@
+================================================================================
+ P R O C E S S I N G
+================================================================================
+
+PROGRAM
+- soubor ve spustitelném formátu, prostě tam leží
+
+PROCES
+- instance progamu vytvořená operačním systémem
+- má kódu programu a jeho data
+- adresový prostor procesu
+
+VLÁKNO (THREAD)
+- místo uvnitř jednoho procesu, které mi umožňuje sledovat, co se děje
+- vlákna sdílí adresový prostor, každé má vlastní zásobník
+- entita v kernelu
+
+PROCESS CONTEXT SWITCH
+- procesy se střídají o prostředky
+- pomalé
+
+THREAD CONTEXT SWITCH
+- schovaný stav procesoru na přehazování vláken
+- vlákna musí běžet, aniž by věděla o tom, že je jejich běh přerušován
+- rychlé
+
+FIBER
+- můj vlastní sheduling nad vlákny podle knihoven
+- lehkotonážní věc u mě v programu
+- něco úplně jiného než vlákno prostě
+
+VYTVÁŘENÍ PROCESU
+- zavolání vrátí pid (process id)
+- proces mají unikátní identifikátor, kdo spustil, dostane ho do ruky
+
+SCHEDULER
+- část OS, která nějakým algoritmem rozděluje moje zdroje mezi procesy, vlákna..
+- různé přístupy:
+  - maximalizace vytížení
+  - spravedlivé rozdělení
+  - minimalizace čekání
+  - minimalizace response time (interaktivní aplikace, myš třeba)
+- priorita - číslo vyjadřující důležitost procesu
+  - skládá se ze dvou:
+  - statická - podle hierarchie
+  - dynamická - přidává fairness, zvyšuje se všem při čekání
+  
+PŘÍKLADY ALGORITMŮ
+> jednoduché
+- First Come, First Serve
+- Shortest job first
+- Longest job first
+> preemptivní
+- Round Robin (Kruhová sýkorka) O(1)
+    - Round Robin byly podpisové archy, kde se lidi podepisovali do kruhu, 
+      aby nebylo poznat, kdo se podepsal jako první 
+    - preemptivní FCFS, při vypršení time slice na konec fronty
+- Multilevel feedback-queue O(1)
+    - víc front, různé time slicy
+    - plánuju odshora, první neprázdnou frontu naplánuju
+    - running+blocked samo - příště o frontu výš
+    - vypršel time slice - příště o frontu níž
+
+MULTITASKING
+- víc spuštěných procesů zároveň a vypadá to, že běží souběžně (i jeden proc.)
+> cooperative
+   - když vím, že všechny procesy spolupracují a jsou hodný
+   - například v síťových switchích
+   - scheduling OS potlačen, procesy se řídí samy
+> preemptive
+   - musí se počítat s nespolupracujícími
+   - když naplánuju jednotku, určím time slice
+   - a potřebuju zdroj vnějšího přerušení, něco jako hodiny
+   - procesy na uživatelském režimu to přerušení nemůžou zamaskovat
+   - vypne to ten proces a naplánuje něco jiného
+   
+
+
+MULTIPROCESSING
+- víc procesorů v jednom systému
+- je složitější pro scheduler
+
+AFINITA 
+- vlákna, procesu
+- můžu vynutit, že popěží na určitém procesoru
+
+KONTEXT
+- stav plánovací jednotky
+
+REAL-TIME SCHEDULING
+- každý task má release time a deadline
+- typy deadlinu
+    - hard - když to nestihnu, tak už to ani nemusím počítat
+nestihnete zasunout grafitové tyče do reaktoru a už vás to netrápí, nepříjemný..
+    - soft - blbý, ale ještě se mi to vyplatí spočítat
+airbag - nemůže vyletět hned, ale čeká na tělo
+
+STAVY PROCESU
+- created
+- ready - bojuju, abych byl naplánován schedulerem 
+- running
+- blocked - čekám na zdroje, třeba chci číst ze souboru
+          - nebo se zablokuju voláním join a čekáním na cizí zombie stav
+- terminated - zombie, čeká se, až někdo zkontroluje, jestli jsem doběhl
+
+INTER-PROCESS COMUNICATION
+- pipes - trubka od jednoho k druhému
+- sdílená paměť
+- signály
+
+
+
+
+
