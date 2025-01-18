@@ -1,0 +1,115 @@
+================================================================================
+VIRTUÁLNÍ PAMĚŤ
+================================================================================
+- pracuje s ní procesor, používají všechny instrukce
+- fyzická paměť - jednorozměrná
+HW MECHANISMUS PŘEVODU VIRTUÁLNÍ -> FYZICKÁ - memory management unit MMU
+- když neexistuje, výjimka
+- segmentace, stránkování
+           _______________________________________________
+           |co bude na zkousce:
+           | 6 teorie - po jednom bodu
+           | 4 PRAXE - po třech bodech
+           |    alokace pameti (first fit, best fit atd)
+           |    FAT
+           |    virtualni pamet
+           |    page faulty
+           -----------------------------------------------
+- každý proces má vlastní virtuální adresový prostor
+- historicky kvůli tomu, že byla malá fyzická paměť - části na discích
+- bezpečnější, můžete přistupovat jenom tam, kam máte povoleno
+- memory mapped I/O, sdílená paměť mezi procesy
+
+SEGMENTACE
+- adresový prostor procesu rozdělen na segmenty (konstanty, static data...)
+- každý segment má číslo - adresace je dvojice - číslo segmentu, offset
+- tabulka pro každý proces - připraví OS
+- hardware zkontroluje:
+    jestli nesahám mimo segment -> výjimka
+    kontrola práv - read only atd
+    vyzvednu třetí hodnotu - začátek segmentu ve fyzické paměti
+- segment je fyzicky souvisle naalokován
+
+STRÁNKOVÁNÍ
+- rozdělím virt. adr. prostor na stránky (mocniny dvojky, stejně velké)
+- fyzický na frames (stejná velikost)
+- stránkovací tabulka - pole indexuju, číslem stránky
+- zjistím číslo rámce, jestli existuje, práva
+- když neexistuje -> výpadek stránky PAGE FAULT - swapuje se s diskem
+- stránky jsou očíslované
+- virtuální adresu - vím, kolik bitů je číslo stránky, kolik bitů offset
+
+- problémy:
+    velké tabulky žerou místo
+    používají opravdu procesy svůj adresový prostor?
+    sahá se do paměti dvakrát, při víceúrovňovém víc - čas
+        - TLB translation lookaside buffer, klíč číslo stránky, hodnota rámce
+    
+PŘÍKLAD
+32bit adresy
+2 urovne strankovani
+4kB stránky
+stranka druhé urovne pokryva - 4MB 
+
+chci číst 8000 bytů
+- vejde se to do stránkovací tabulky druhé úrovně?
+může
+ - min počet výpadků 0
+ - větší počet výpadků - chybí tabulka druhé úrovně +1
+                     - je to tam blbě v prostředku +3
+ - max počet - na rozhraní tabule druhé úrovně +5 (dvě tab, tři str.)
+tak, aby sahalo na co nejvíc stránek, na co nejvíc tabulek
+
+- tabulka první úrovně tam vždycky je
+
+průběh stránkování
+- kouknu do tlb
+- procházím tabulky
+- získám framee
+- bit A(ccessed) v tabulce nastavuje mmu
+- bit D(irty), když tam někdo zapíše
+- schovám do TLB
+
+PAGE FAULT
+- vrátí instruction pointer před istrukci a vrátím faul, opraví to OS?
+- znova se pustí instrukce, dokud to padá, tak se to OS snaží opravovat
+
+PAGE REPLACEMENT ALGORITHM
+optimal - vyměn stránku, kterou nebudu využívat nejdelší čas
+cache replacement - hledám oběť na vyhození
+>HODINY
+ - stránky jsou kolem dokola do kruhu
+ - u každé A (1/0)
+ - při výpadku, tam, kam koukám ručičkou
+   A == 1 -> A = 0
+   A == 0 -> je to oběť!!!!!!
+   
+>NRU not recently used
+  beru accesed 0, dirty 0, zohledňuju i dirty
+  
+>LRU least recently used
+ - obětuju tu, které nebyla navšívena nejdelší čas
+ - jde to snadno udělat hardwarově
+ - softwarově - posouvat ve spojáku, blbé
+ 
+>NFU not frequently used
+ - u každé stránky počítadlo, jednou za čas přičte os A a vynuluje ho
+ - aging - jednou za čas se počítadlo vydělí dvěma
+ - čerstvě narozená nezačíná s nulou .)
+ 
+ 
+PARRALELNÍ POGRAMOVÁNÍ
+- race condition - SYNCHRONIZAČNÍ PRIMITIVUM
+                 - zamknu kritickou sekci, odemknu
+                 - aktivní, pasivní - blokující, vlákno se zablokuje prostě
+                 - je to pomalé
+- synchronizační primitiva
+    - spin-lock TSL/CAS
+                - přečtu hodnotu z paměti, porovnám s očekávaným,
+                  když ano, zapíšu, jinak nic
+                - dělám to atomicky, namůže mi tam vlézt nikdo jiný
+    - semafor - blokující, syscall OS
+              - up, down - atomické, zajištěno opsystémem
+              - down, vezmu počítadlo, pokud > 0 nic, jinak do proces fronty
+              - up nula a neprázdná fronta - proberu vlákno, jinak counter++
+              - down na začátku kritické, up na konci
