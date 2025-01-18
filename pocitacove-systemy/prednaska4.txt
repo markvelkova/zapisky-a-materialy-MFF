@@ -1,0 +1,107 @@
+implementace foru a ifu v assembleru - easy
+
+REGISTRY
+- nejrychlejší paměť, kterou máme
+- různé instrukce pracují s různými typy registrů
+o obecné  - slouží ke všemu
+o speciální integerové na aritmetiku, nejsou k ničemu jinému
+o floatové 
+o adresové - jen pro adresaci
+o stavové 
+o skokové, branch - nastavím si tam adresu, kam skáču
+o predikáty - jednobitvé, instrukce jsou podmíněny predikáty
+o aplikační - divné, pro konkrétní instrukce
+o systémové
+o vektorové
+
+x86
+- aliasing - al ah ax - zmena casti meni i ty jiné - nesikovné
+- akumulator, base (jako základ pro adresaci), counter (nkrát - n je v C), data
+- SI, DI - source/destination index adresace v řetězzcových instrukcích
+- BP adresace na zásobník
+- SP stack pointer - vršek zásobníku
+- je flagový rozdíl mezi znaménkovou a bezznaménkovou architekturou
+- IP instruction pointer
+
+MIPS
+- 32 bit, r0-r31
+- r0 vždycky 0, zápisy se ignorují
+- r31 zanmená instrukci jal, je tam uložená hodnota return
+- ostatní jsou si rovnocenné, ale použití definováno ABI
+- frame pointer - kus zásobníku, kde má funkce své proměnné atd
+- global pointer
+- chybí hardwarový zásobník
+- flagy nejsou
+- PC - program counter
+- musím si rozmyslet, co zachová funkce volaná z funkce volající 
+    - extrém - uložím všechny, které chci použít na zásobník, použiju, 
+               pak to tam vrátím a volající funkce má všechno zachované
+    - extrém2 - neuložím nic, přepíšu všechno
+- některé registry se schovávají, některé ne - temporaries a saved temporaries
+
+
+
+
+ABI = application binary interface
+- doporučení od výrobce doprovázející ISA
+- jak se to má používat, když se to nedodržuje, 
+  ->mohou být problémy při používání jiných překladačů
+- pokud se aplikace a knihovna kompilují zvlášť 
+  ->měly by stejným překladačem nebo překladači splňujícímí ABI
+- jak vypadá zásobník, jak používat které registry
+- 32bit x86 to nemělo
+
+OPERACE
+- dvojoperandové - x86 eax+=ebx
+- trojoperandové - MIPS, co+co kam
+- add - tři registry
+- addi - konstanta 16bitová, znaménkově se rozšíří na 32
+- sub
+- subi
+- and
+- or
+- xor
+- nor
+- sll/slr něco = něco << o kolik
+- sra - arithmetic, zachovává znaménko
+loady, story
+- load word (32bit)
+- lw $rd, imm16($rs) = R[rd] = M[R[rs]+signedext32(imm16)}]
+- imm kvůli přístupu do struktury
+- store word sw
+- lb load bytes
+- přepíšu celý registr, do vršku se doplní nuly
+- lbu ignoruje znaménkovost
+- sb store bytes
+moves
+- li $rd imm32
+    - je to pseudoinstrukce, uloží 32bit konstantu do registru
+    - není reálně implementovaná - isntrukce sama má 32 bitů
+    - nepoužívá se u malých konstant
+    - místo toho ori reg, zero, konst
+- move
+skoky
+- j addr
+- jr $rs
+- jal addr
+    - jump and link
+    - R[31] = PC+4
+    - PC = addr
+    - takže mám uloženou návratovou adresu
+podmíněné skoky
+- beq reg reg addr branch if equal
+- bne analogicky
+- chybí porovnání na větší menší v jumpech
+testing
+- slt/sltu reg1, reg2, reg3  - ucko je unsigned
+    - když reg2<reg3 reg1=1, jinak reg1 = 0
+- tady se vyuzije nula registr
+- slti/sltiu
+    - stli/u reg1, reg2, imm
+
+
+
+
+
+
+
