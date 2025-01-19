@@ -76,6 +76,8 @@ sw.Stop()
 * například nejčastěji tam používám třídu A - zinlinuju to pro A
 * cold path pro ostatní scénáře
 
+
+(dělalo se ještě použití benchmarků, to tady chybí)
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 --------------------------------------------------------------------------------
 
