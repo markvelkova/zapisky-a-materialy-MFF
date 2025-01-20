@@ -35,7 +35,34 @@ class A {
 * **Obsolete** - dáváme najevo ostatním programátorům, že používají zastaralou metodu -> udělá se warning
 * StringSyntax  třeba pro zvýraznění v regexech, json v prostředí
 
-## chování výčtových typů
+## výčtové typy - chování
+* jsou založené na typu int, všechny hodnoty jsou compile-time konstanty typu int
+* můžeme explicitně změnit:
+```
+enum E : byte { .. }
+```
+```
+enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday };
+enum Months { January, February, March, April, May, June, July, August, October, November, December };
+```
+* do dnů můžu cpát zase jen dny, kdyby to byly konstanty, nikdo by nehlídal, jestli tam nedosazuju třeba měsíce
+* C# ale obecně nezakazuje vyběhnout z rozsahu
+```
+var day = DayOfWeek.Saturday;
+day++; //vypsalo by se Sunday
+day++; //vypsalo by se prostě 7 (indexujeme od 0 :))
+```
+proč se nekontroluje, jestli vyběhneme mezi?
+* aby se s tím rozumně pracovalo
+```
+for (Month month = Month.May; month <= Month.December; month++) { .. }
+```
+* při posledním běhu se nám měsíc zinkrementujee na 13 a pak cyklus končí, kdyby nebylo možné vyjít mimo rozsah, nebylo by možné to takhle hezky napsat
+
+další použití
+* můžeme se randomem generovat int a explicitně je castovat na měsíce `(Month) a`
+
+## výčtové typy - flags
 * když si ty hodnoty nastavím na mocniny 2, můžu o používat jako flagy, ale při toString,když am mám třeba 7, vypíše se 7, protože dotnet neví, že to není náhoda
 * atribut **Flags** před deklaraci enumu -> vypíše enum věci pro 2,4,1
 ```
