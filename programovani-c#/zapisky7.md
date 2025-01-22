@@ -96,7 +96,7 @@ class B : A
         public override h() > ale je provázaná s novou g(), využívá její implementační
     
     class C : B
-        public override g()
+        public override g() //error
 ```
 * můžeme označit jako sealed i celou třídu - zakážeme od ní dědit dál
 ```
