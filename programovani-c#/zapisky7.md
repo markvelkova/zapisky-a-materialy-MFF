@@ -191,8 +191,8 @@ i1.m2() > C.m2()
 
 ```
 class D: B, I1
-    public new void m1() {C.m1()} //member hiding
-    public override void m2() {C.m2()} //VMT[1] - C.m2()
+    public new void m1() {D.m1()} //member hiding
+    public override void m2() {D.m2()} //VMT[1] - D.m2()
     
 // dědí VMT B - VMT[0] - B.f(), VMT[1] - B.m2()
 // dědí nevirtuální B.m1
@@ -201,7 +201,7 @@ class D: B, I1
 |VMT D|        |
 |-|---------|
 |0| B.f()|
-|1|C.m2()|
+|1|D.m2()|
 
 |I1 tab D|        |
 |-|---------|
