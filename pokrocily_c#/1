@@ -1,1 +1,185 @@
-placeholder
+# 1. přednáška
+
+## konverze
+- dělá se **za překladu**
+
+### implicitní konverze
+```
+object o = s (string)
+- proběhne implicitní konverze
+- zkopírování pointeru
+    
+long y = x (je int);
+- nemělo by být možné
+- je potřeba udělat znaménkové rozšíření
+- generování CIL
+
+object o = x (je int);
+- int je potomek object
+- bude boxing
+```
+- **pozor** implicitní konverze long/int->float zaokrouhluje
+
+### explicitní konverze
+```
+string s = (string)o;
+je tam jen runtime check, ale potenciálně nebezpečné
+
+int x = (int) y (je long);
+říkám tím překladači, že vím o zúžení přesnosti
+
+int x = (int) o;
+unboxing
+```
+### zlomky
+
+#### pokus 1
+```
+class  Fraction {
+    private int _a,_b;
+    public Fraction(int a,b);
+}
+
+Fraction f = new Fraction(1,2);
+double d = f; //nejde
+```
+#### znovu a lépe
+```
+class  Fraction {
+    private int _a,_b;
+    public Fraction(int a,b);
+    public double ToDouble() => _a/_b; //ale tohle je CELOČÍSELNÉ DĚLENÍ
+}
+
+Fraction f = new Fraction(1,2);
+double d = f.ToDouble(); 
+```
+#### tak ještě jinak
+```
+class  Fraction {
+    private int _a,_b;
+    public Fraction(int a,b);
+    public double ToDouble() => (double)_a/(double)_b;
+}
+
+Fraction f = new Fraction(1,2);
+double d = f.ToDouble(); 
+```
+#### opačně na fraction
+- chceme `d.ToFraction()`
+1) můžeme si udělat ExtendedDouble `((ExtendedDouble)d).ToFraction()`
+    - hodnotové jsou sealed - ani to nejde
+    - navíc se koukáme na předka jako na potomka, **ÚPLNÁ BLBOST**
+2) přivyrobit konstruktor `Fraction(double)`
+    - `f = new Fraction(d)`
+    - fungovalo by, není ideální
+3) staticky     
+```
+class  Fraction {
+    private int _a,_b;
+    public Fraction(int a,b);
+    public double ToDouble() => (double)_a/(double)_b;
+    public static ToFraction (double) {...}
+}
+
+f = Fraction.ToFraction(d);
+```
+4) **extension metody**
+
+## extension metody
+```
+class A {
+    public void m() {...}
+}
+
+class X {
+    //původní
+    public static void f( A a, int b) {...}
+    //extension
+    public static void f( this A a, int b) {...}
+}
+
+A a1 = new A();
+a1.m() -> A.m(a1) jako this parametr
+X.f(a1, 5);
+a1.f(5); // pořád se volá na typu X, sémantika nová není
+```
+- jedná se jen o změnu syntaxe
+
+co když
+```
+class A {
+    public void m() {...}
+}
+
+class X {
+    //extension
+    public static void f( this A a, int b) {...}
+}
+class Y {
+    public static void f( this A x, int y) {jiné ...}
+}
+
+A a1 = new A();
+X.f(a1, 5); //je zjevné, kam to vede
+Y.f(a1, 5);
+
+a1.f(5); //BUDE PŘEKLADOVÁ CHYBA
+```
+**musí být jednoznačná volba metody**
+- ale jak víme, že nějaké nejsou už v dotentu někde?
+- **třída musí být statická**
+```
+static class X {
+    public static void f( this A a, int b) {...}
+}
+static class Y {
+    public static void f( this A x, int y) {jiné ...}
+}
+```
+- překladač prohledává jen statické třídy v daném kontextu, ve jmenném prostoru kódu, nebo v těch, které vidí (using)
+- poud se to dá přeložit bez extension metod, přeloží se to normálně
+```
+class A {
+    public void m() {...}
+    public void f(int b) {...}
+}
+
+class X {
+    public static void f( this A a, int b) {...}
+}
+class Y {
+    public static void f( this A x, int y) {jiné ...}
+}
+
+A a1 = new A();
+X.f(a1, 5); //je zjevné, kam to vede
+Y.f(a1, 5);
+
+a1.f(5); // volá se A.f(int)
+```
+**jiný příklad**
+- máme třídu `C`
+- `CExtension`, kde je funkce `CompareTo(this C, C c)`
+- co když:
+```
+List<C>.Sort() // selže za runtime
+// máme zkusit zavolat CompareTo, když to nepůjde, tak selži?
+// ne, sort se překládal někdy dávno, o naší extension nevěděl
+```
+**návrat ke zlomkům**
+
+```
+class  Fraction {
+    private int _a,_b;
+    public Fraction(int a,b);
+    public double ToDouble() => (double)_a/(double)_b;
+    public static ToFraction (double) {...}
+}
+
+static class DoubleExtension {
+    public static Fraction ToFraction(this double d) {...}
+}
+
+f = d.ToFraction()
+```
