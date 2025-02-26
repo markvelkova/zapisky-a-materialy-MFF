@@ -91,6 +91,48 @@ spustíme cyklus - iterace je generace
     - $S$ - množina stavů
     - $A$ - množina akcí (případně $A_s$, akce proveditelné ve stavu $s$)
     - $P_a(s, s')$ - pravděpodobnost, že po provedení akce $a$ ve stavu $s$, přejde do stavu $s'$
-    - $R(s, s')$ - funkce odměny za přechod
+    - $R(s, s')$ - funkce odměny za přechod - může být záporná i kladná
+- agent začne v $s_0$, udělá akci $a_0$, přejde do $s_1$, dostane odměnu $r_0$ etc
+- celková odměna $R = \sum(r_t) = \sum(R_a_t (s_t, s_{t+1})$ 
+- nekonveruje, potřebujeme $\gamma$ distantní faktor, pak:
+$R = \sum \gamma^t R_{a_t} (s_t, s_{t+1})$ 
+- $\pi: S \times A \to [0,1]$
+- $\pi (s,a)$ - pravděpodobnost, že ve stavu $s$ provede akce $a$
+- $V^\pi(s)$ - střední hodnota přes akce ve daném stavu
+- **hodnota akce při stavu** $Q^\pi (s,a) = E[R_0 | a_t \~{} \pi(s_t), s_0 = s, a_0 = a]$
+## základní rovnice
+- $T^* = argmax_\pi V^\pi(s)$
+## explorace, exploitace
+- průzkum nových, braní nejlepší známé akce
+### $\epsilon$-greedy 
+- s pravděpodobností $\epsilon$ vyberu náhodnou akci
+- nejdřív vysoké $\epsilon$, postupně snižujeme, takže konvergujeme k používání nejlepší známé
+### co nám dá $Q(s_t,a_t)$?
+- $Q(s_t,a_t) = E [ R_{a_t}(s_t, s{t+1}) + \gamma V^\pi(s{t+1}) ]$
+- můžeme vyjádřit V
+
+nebo
+
+- $V(s_t) = \sum {\pi(s_t, a)} * \sum{P_{a_t}(s_t, s_{t+1}} = [R_{a_t}(s_t, s_{t+1}) + \gamma V(s_{t+1})]$
+
+## Q učení
+- snažíme se naučit Q, je to matice, řádky stavy, sloupce akce
+- pustíme agenta a přepočítáváme Q
+- inicializuju všechno na nula
+- agent provede první akce, dostane první odměnu
+- zapíšeme si do matice, využiju přiom rovnice $Q(s_t,a_t)$
+- vyberu přitom jen nejepší akci
+- $Q(s_t,a_t) = r_t + \gamma * max_a Q(s_{t+1}, a)$
+- ale to bychom si přepsali historii, takže udělám vážený součet nového s tím, co už jsem věděl
+- $Q^{new}(s_{t},a_{t}) \leftarrow (1-\alpha) \cdot Q(s_{t},a_{t}) + \alpha \cdot  \bigg( r_{t} + \gamma\cdot \max_{a}Q(s_{t+1}, a) \bigg)$
+
+**co když máme jen V**
+- přejdu do akce s největším rewardem
+- maximalizujeme přes $a$ sumou přes $s'$ $\sum {P_a (s, s') * v(s')}$
+
+### nevýhody Q-učení
+- pokud budu vždycky nadhodnocovat nějakou akci, pak ji budu pořád vykonávat a nezkusím jinou
+
+## SARSA (state-action-reward-state-action)
 
 
