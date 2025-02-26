@@ -93,7 +93,7 @@ spustíme cyklus - iterace je generace
     - $P_a(s, s')$ - pravděpodobnost, že po provedení akce $a$ ve stavu $s$, přejde do stavu $s'$
     - $R(s, s')$ - funkce odměny za přechod - může být záporná i kladná
 - agent začne v $s_0$, udělá akci $a_0$, přejde do $s_1$, dostane odměnu $r_0$ etc
-- celková odměna $R = \sum(r_t) = \sum(R_a_t (s_t, s_{t+1}))$ 
+- celková odměna $R = \sum(r_t) = \sum{R_a_t (s_t, s_{t+1})}$ 
 - nekonveruje, potřebujeme $\gamma$ distantní faktor, pak:
 $R = \sum \gamma^t R_{a_t} (s_t, s_{t+1})$ 
 - $\pi: S \times A \to [0,1]$
