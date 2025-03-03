@@ -87,23 +87,36 @@ spustíme cyklus - iterace je generace
 ## agenti ve zpěnovazebním učení
 - maximalizuje odměnu
 ## Markovský rozhodovací proces (MDP)
-- čtveřice $(S, A, P, R)$
+- **čtveřice $(S, A, P, R)$**
     - $S$ - množina stavů
     - $A$ - množina akcí (případně $A_s$, akce proveditelné ve stavu $s$)
-    - $P_a(s, s')$ - pravděpodobnost, že po provedení akce $a$ ve stavu $s$, přejde do stavu $s'$
+    - $P_a(s, s')$ - pravděpodobnost, že po provedení akce $a$ ve stavu $s$, přejde do stavu $s'$ - nedeterministické
+        - může se psátt též jako $P(s,a,s')$ nebo $P(s,a)$ to ale vrací stav, pokud máme determinismus 
     - $R(s, s')$ - funkce odměny za přechod - může být záporná i kladná
+        - též $R(s)$, nebo $R_{s}(a)$, nebo $R(s,a)$
 - agent začne v $s_0$, udělá akci $a_0$, přejde do $s_1$, dostane odměnu $r_0$ etc
-- celková odměna $R = \sum(r_t) = \sum{R_{a_t} (s_t, s_{t+1})}$ 
-- nekonveruje, potřebujeme $\gamma$ distantní faktor, pak:
-$R = \sum \gamma^t R_{a_t} (s_t, s_{t+1})$ 
-- $\pi: S \times A \to [0,1]$
-- $\pi (s,a)$ - pravděpodobnost, že ve stavu $s$ provede akce $a$
-- $V^\pi(s)$ - střední hodnota přes akce ve daném stavu
-- **hodnota akce při stavu** $Q^\pi (s,a) = E[R_0 | a_t \~{} \pi(s_t), s_0 = s, a_0 = a]$
+- **celková odměna**
+    - $R = \sum(r_t) = \sum{R_{a_t} (s_t, s_{t+1})}$ 
+    - nekonverguje, je to nekonečná suma, potřebujeme $\gamma$ diskontní faktor (*discount factor*), ten je menší než 0, takže se pořád zmenšuje a suma konverguje, pak:
+    $R = \sum \gamma^t R_{a_t} (s_t, s_{t+1})$
+    - problém je, že $\gamma$ je třeba vybrat správně, příliš malá omezuje rozhodování na moc malém počtu kroků
+- **pravděpodobnost provedení akce**
+    - $\pi: S \times A \to [0,1]$
+    - $\pi (s,a)$ - pravděpodobnost, že ve stavu $s$ provede akce $a$
+        - nebo $\pi (s) = a$ u deterministického agenta
+- **jak dobrý je pro mě stav**
+    - $V^\pi(s) = E[\sum \gamma^t R_{a_t} (s_t, s_{t+1})]$
+    - střední hodnota přes akce ve daném stavu, stední hodnota je potřeba, protože to není deterministické
+- **hodnota akce při stavu**, jak dobrá je akce pi stavu
+    - $Q^\pi (s,a) = E_{\pi}[R + \gamma V^\pi(s')]$ - odměna za akci plus jak dobrý je stav, kam se dostanu
+    - $Q^\pi (s,a) = E[R_0 | a_t \~{} \pi(s_t), s_0 = s, a_0 = a]$
+    - kdybychom perfektně znali Q hodnoty, může prostě vybírat $argmax_{a\in A} Q^{\pi *} (s,a)$
 ## základní rovnice
 - $T^* = argmax_\pi V^\pi(s)$
+- $argmax_{a\in A} Q^{\pi *} (s,a)$
 ## explorace, exploitace
 - průzkum nových, braní nejlepší známé akce
+- je pořeba to vyvážit
 ### $\epsilon$-greedy 
 - s pravděpodobností $\epsilon$ vyberu náhodnou akci
 - nejdřív vysoké $\epsilon$, postupně snižujeme, takže konvergujeme k používání nejlepší známé
@@ -113,26 +126,38 @@ $R = \sum \gamma^t R_{a_t} (s_t, s_{t+1})$
 
 nebo
 
-- $V(s_t) = \sum {\pi(s_t, a)} * \sum{P_{a_t}(s_t, s_{t+1}} = [R_{a_t}(s_t, s_{t+1}) + \gamma V(s_{t+1})]$
+- $V(s_t) = \sum {\pi(s_t, a)} * \sum{P_{a_t}(s_t, s_{t+1}} = E[R_{a_t}(s_t, s_{t+1}) + \gamma V(s_{t+1})]$
 
-## Q učení
+## Q učení - algoritmus
 - snažíme se naučit Q, je to matice, řádky stavy, sloupce akce
 - pustíme agenta a přepočítáváme Q
 - inicializuju všechno na nula
 - agent provede první akce, dostane první odměnu
 - zapíšeme si do matice, využiju přiom rovnice $Q(s_t,a_t)$
-- vyberu přitom jen nejepší akci
+- vyberu přitom jen nejepší akci pokračující ze stavu, kam jsme se dostali naší akcí
 - $Q(s_t,a_t) = r_t + \gamma * max_a Q(s_{t+1}, a)$
 - ale to bychom si přepsali historii, takže udělám vážený součet nového s tím, co už jsem věděl
+### **první varianta udržení historie**
 - $Q^{new}(s_{t},a_{t}) \leftarrow (1-\alpha) \cdot Q(s_{t},a_{t}) + \alpha \cdot  \bigg( r_{t} + \gamma\cdot \max_{a}Q(s_{t+1}, a) \bigg)$
-
-**co když máme jen V**
+    - první je historie, druhé je teď
+    - nechceme to přepsat kvůli nedeterminismu
+    - nemusíme pak udělat tu akci $a$, která byla maximální vpravo
+    - propisují se hlavně ty nejnovjší samozřejmě, ale pořát to udržuje nějakou historii
+### **druhá varianta**
+- $Q^{new}(s_{t},a_{t}) \leftarrow \alpha \cdot \bigg( r_{t} + \gamma\cdot \max_{a}Q(s_{t+1}, a) - Q(s_{t},a_{t})\bigg)$
+### **co když máme jen V**
 - přejdu do akce s největším rewardem
-- maximalizujeme přes $a$ sumou přes $s'$ $\sum {P_a (s, s') * v(s')}$
+- maximalizujeme přes $a$ sumou přes $s'$ - $\sum {P_a (s, s') * V(s')}$
 
 ### nevýhody Q-učení
 - pokud budu vždycky nadhodnocovat nějakou akci, pak ji budu pořád vykonávat a nezkusím jinou
 
 ## SARSA (state-action-reward-state-action)
+- učí se to Q hodnotu současné strategie, současného chování
+- například některé akce jsou pro robota nebezpečné, to nechceme
+- Q učení se naučí rychleji, nakonec se naučí optimum i kdybychom používali úplně náhodné kroky
+- sarsa ho nutí, aby se vyhýbal dírám, za to dostane hodně zápornou odměnu, výrazně víc, než v Q učení
+- Q učení má nastavené explorativní chování, stejně by tam vlezlo znova
+- učí se pomaleji, je stabilnější
 
 
