@@ -160,4 +160,71 @@ nebo
 - Q učení má nastavené explorativní chování, stejně by tam vlezlo znova
 - učí se pomaleji, je stabilnější
 
+# 3. přednáška - evoluční algoritmy
+- genetické algoritmy - jedinci vektory 0,1
+- genetické programování - jedinci třeba stromy výrazů
+- evoluční programování - evoluce konečných automatů
+- evoluční strategie - vektory reálných čísel...
+- typicky je problémově specifický algoritmus lepší než genetický
+## simple genetic algorithm
+- chceme maximalizovat fitness funkci
+### fitness funkce
+- $f: D \rightarrow \mathbf{R}$, kde $D$ je ${0,1}^n$
+- $f(x) = \sum x_i \space xor \space p_i$ nebo $f(x) = \sum I(x_i == p_i)$, kde $I$ je indikátor
 
+- problémy řešitelné - součet podmnožiny, problém batohu
+### součet podmožiny
+- $min |k-\sum A|$, kde $A$ je množina, $k$ je cílový součet
+- ale algoritmus chce maximalizovat...
+    - záporné hodnoty? 
+    - $\frac {1}{|k-\sum A|}$
+    - přičtení velkého čísla
+```
+pop <- náhodná populace
+while not happy:
+    fits <- vyhodnoť pop (f(ind) for ind in pop)
+    //making_pool je seznam jedinců, lepší víckrát, horší chybí, beru dvojice, každá má dva potomky
+    mp <- select (pop, fits)
+    off <- crossover(mp)
+    off <- mutation(off) 
+    pop = off
+return pop (nebo jen nejlepšího)
+```
+### jak udělat selekci
+#### ruletová selekce
+- pravděpodobnost výběru jedince odpovídá fitness
+- ruleta má tolik políček, kolik je součet fitnessů
+- $p_{ind} = \frac{f_{ind}}{\sum f_j}$
+- vadí záporná fitness, vadí některá škálování
+- můžeme ji udělat silnější než turnaj
+#### turnajová selekce
+- nevadí škálování, nevadí záporná fitness
+```
+i1, i2 <- vyber uniformně náhodně z populace
+if f(i1) > f(i2) and rand() < 0.8 //tím and oslabujeme selekci
+    return i1
+else
+    return i2
+```
+### křížení
+- bere dvojice rodičů
+#### jednobodové křížení
+- náhodně vyberu bod a prohodím konce
+#### dvoubodové křížení
+- vyberu dva body, prohodí, neprohodí, prohodí etc.
+#### uniformní křížení
+- na každou pozici hodíme korunou, od koho to vezmeme
+- druhý potomek buď komplementárně, nebo znovu
+- může být víc rodičů klidně
+### mutace
+- pokud znám problém, můžu tady zapojit heuristiky
+- můžu mít víc mutací klidně
+#### bit-flip
+- s určitou pravděpodobností změním bit
+### jak nepřijít o nejlepší řešení
+#### elitismus
+- automaticky nahradíme náhodého potomka nejlepším rodičem
+#### jiné počty v generacích
+- nebo obecně upravit změnu generace `pop = off` - $(\mu, \mu)$
+- $(\mu, \lambda)$ kde $\lambda > \mu$
+- $(\mu + \lambda)$ - zajistí, že nepřijdeme o nejlepší řešení, třeba $100+1$ nebo $1+100$
