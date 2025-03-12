@@ -336,7 +336,7 @@ pokračujeme z 6, vybíráme 5
 - jedno, více bodové
 - aritmetická
     - $w * p_1 + (1-w) * p_2$ z váhy a rodičů
-    - $p_1 + w*(p_2 - p_1)$ kde $w$ náleží $(-\alpha , 1 + alpha)$
+    - $p_1 + w*(p_2 - p_1)$ kde $w$ náleží $(-\alpha , 1 + ,\alpha)$
 - rekombinace
     - vyrobí se váženým průměrem superrodič a z něj pak mutacemi potomci
 ### mutace
