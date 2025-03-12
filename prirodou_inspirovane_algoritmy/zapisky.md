@@ -228,3 +228,129 @@ else
 - nebo obecně upravit změnu generace `pop = off` - $(\mu, \mu)$
 - $(\mu, \lambda)$ kde $\lambda > \mu$
 - $(\mu + \lambda)$ - zajistí, že nepřijdeme o nejlepší řešení, třeba $100+1$ nebo $1+100$
+
+# 4. přednáška - evoluční algoritmy poračování
+## jak zobecnit evoluční algoritmy
+- čísla od $0$ do $k$
+- barvení grafu - počet správných hran
+## jedinec jako permutace
+- permutace viz **problém obchodního cestujícího**
+- jedinec je permutace od $1$ do $k$
+### mutace
+- `reverse` části jedince - `1,2,3,4,5 -> 1,4,3,2,5`
+- `swap` `1,2,3,4,5,6 -> `1,5,3,4,2,6`
+- `split and swap` `1,2,3,4,5,6 -> 3,4,5,6,1,2,3`, vlastně rotace - to u TSP nedává smysl, je to furt ta stejná kružnice
+- `přesun úseku` `1,2,3,4,5,6 -> 1,4,5,2,3,6`
+### kde ještě se dají použít permutace
+- **bin packing** - umístit předměty do přihrádek (binů) tak, že se minimalizuje počet binů
+    - permutace je pořadí, v jakém máme brát předměty
+### křížení u TSP
+#### order crossover (OX)
+```
+1,2|3,4,5,6|7,8
+4,7|2,8,5,3|1,6
+xxxxxxxxxxxxxxx
+prohodím středy
+zbytek beru ze svého původního, pokud tam ještě není
+4,6|2,8,5,3|7,1
+2,8|3,4,5,6|1,7
+```
+#### partially mapped crossover (PMX)
+```
+1,2|3,4,5,6|7,8
+4,7|2,8,5,3|1,6
+xxxxxxxxxxxxxxx
+prohodím středy
+zkopíruju ze sebe, co jde
+8 je namapovaná na 4, místo 8 napíšu 4
+etc
+1,6|2,8,5,3|7,4
+8,7|3,4,5,6|1,2
+```
+#### edge recombination (ER)
+#### order crossover (OX)
+```
+1,2,3,4,5,6,7,8
+4,7,2,8,5,3,1,6
+sousedi:
+1 | 2 8 3 6
+2 | 3 1 7 8
+3 | 4 2 1 5
+4 | 5 3 6 7
+5 | 6 4 3 8
+6 | 7 5 1 4
+7 | 8 6 2 4
+8 | 1 7 2 5
+kouknu na seznamy, vyberu nejkratší příp random
+vybrali jsme 1, vyberu si následníka s nejméně záznamy
+1,6
+2 | 3 x 7 8
+3 | 4 2 x 5
+4 | 5 3 6 7
+5 | 6 4 3 8
+6 | 7 5 x 4  <<<
+7 | 8 6 2 4
+8 | x 7 2 5
+----
+pokračujeme z 6, vybíráme 5
+2 | 3 x 7 8
+3 | 4 2 x 5
+4 | 5 3 x 7
+5 | x 4 3 8 <<<
+7 | 8 x 2 4
+8 | x 7 2 5
+----
+1,6,5
+2 | 3 x 7 8
+3 | 4 2 x x
+4 | x 3 x 7 <<<
+7 | 8 x 2 4
+8 | x 7 2 x
+----
+1,6,5,4 - trojka se vybírá nenáhodně konečně
+2 | 3 x 7 8
+3 | x 2 x x <<<
+7 | 8 x 2 x
+8 | x 7 2 x
+----
+1,6,5,4,3
+2 | x x 7 8 <<<
+7 | 8 x 2 x
+8 | x 7 2 x
+----
+1,6,5,4,3,2
+7 | 8 x x x
+8 | x 7 x x <<<
+----
+1,6,5,4,3,2,8
+7 | x x x x
+----
+1,6,5,4,3,2,8,7
+```
+- ale pozor, nemusí mi vyjít hrana z posledního do prvního
+## jedinec jako vektor reálných čísel
+- spojitá optimalizace $min (f: \mathbf{R} ^ n \rightarrow \mathbf{R})$
+- tvar křídla u letadla
+- rozmisťování větrníků ve větrných elektrárnách
+### křížení
+- jedno, více bodové
+- aritmetická
+    - $w * p_1 + (1-w) * p_2$ z váhy a rodičů
+    - $p_1 + w*(p_2 - p_1)$ kde $w$ náleží $(-\alpha , 1 + alpha)$
+- rekombinace
+    - vyrobí se váženým průměrem superrodič a z něj pak mutacemi potomci
+### mutace
+- nezatížená - vygeneruje nové číslo
+- zatížená - bere pozici rodiče plus $\sigma$ násobek čísla kolem nuly
+- jako koeficient násobení můžeme brát třeba i $e^{číslo-z-normálního-rozdělení-0-1}$
+- vliv mutace $\sigma$ se hodí postupem času snižovat, je lepší exponenciálně než lineárně
+#### pravidlo 1/5
+- $\sigma$ velká - skáču víceméně kamkoli
+    - pravděpodobnost, že skočíme správně, je délka části, kde jsme lepší než rodič, oproti celé délce
+    - čím lepšího máme jedince, tím menší pravděpodobnost, že náhodně vyrobíme lepšího jedince
+- $\sigma$ malá
+    - pravděpodobnost lepšího je jedna polovina - buď je funkce rostoucí nebo klesající
+    - můžeme se posunout jenom kousek
+- sledujeme pravděpodobnost zlepšení, když je větší než $1/5$, zvětším $\sigma$, jinak zmenším $\sigma$
+- jedna z prvních evolučních strategií
+- je to ze 70. let, dnes už se moc nepoužívá
