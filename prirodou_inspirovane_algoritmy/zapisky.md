@@ -354,3 +354,71 @@ pokračujeme z 6, vybíráme 5
 - sledujeme pravděpodobnost zlepšení, když je větší než $1/5$, zvětším $\sigma$, jinak zmenším $\sigma$
 - jedna z prvních evolučních strategií
 - je to ze 70. let, dnes už se moc nepoužívá
+
+## diferenciální evoluce
+### motivace
+nezávislé na rotacích funkce, škálování
+### průběh
+- vyber $p_1$ až $p_4$ uniformně náhodně
+- $o' = p_1 + F*(p_2 - p_3)$, dobrá počáteční hodnota $0.8$
+- $o = uniformXover(p_4, o', CR)$
+- $f(o) > f(p_4) ->$ vyber do další generace jen lepšího
+- $CR$ je pravděpodobnos, že se vybírá z konkréního z těch jedinců, není to 50:50
+
+
+# 5. přednáška - genetické programování
+## genetické programování a strom výrazu
+- prohazujeme podstromy
+### symbolická regrese
+- dostanu funkce, jaké mám k dispozici a chci minimalizovat součet čtverců
+- v lineární regresi byl dán vzoreček a hledaly se koeficienty, tady hledáme vzoreček
+- máme funkce (neterminály), vstupy a konstanty (terminály), chceme co nejpřesnější vzorec
+#### jak vybrat konstanty
+- relevantní - $\pi, e, g, c, malá celá čísla$
+- nebo si je to prostě vyrobí samo
+- hodit tam funkci, která vygeneruje náhodnou konstantu, může se měnit při mutaci
+#### jak mutovat
+- prohodit větve, změnit fuknci (+ na *), změnit terminál
+- vložení stromečku - třeba o $+1$ nebo $+x_1$
+- shrink - nahradit neterminál jedním z terminálů, které se v něm vvskytují
+- **bloat** stromy rostou v průběhu programu
+    - můžeme přidat do fitness velikost
+    - nebo v kížení prohazovat jen podstromy s podobnou hloubkou
+#### jak generovat náhodné strom
+##### full přístup
+```
+if hloubka < d:
+    vyber neterminal
+else
+    vyber terminal
+```
+##### grow
+#### jak přidat podmínky
+- mezi něčím platí jedna fukce, jinde druhá
+- přidám neterminál
+```
+if_less_then (a,b, x,y)
+    return x if a<b else y
+```
+```
+if (bool, x,y)
+    if(bool) -> x else y
+```
+- zavedením tohohle zavádíme typované genetické programování, neterminály příjímají různé typy terminálů
+- jediná kontrola při prohození, jestli podstromy vrací stejný typ
+- kontrola při generování, vrací to celé float?
+#### jak přidat pomocné funkce
+- které si algoritmus vyrobí sám
+- jedinec nebude jeden strom, ale víc stromů, main a pomocné a v mainu můžeme používat tyto nové neterminály
+- ty pomocné funkce, můžou se volat navzájem? je třeba zabránit jim v nekonečené rekurzi
+- mohou být i sdílené pro celou populaci
+### stromový přístup k hledání elektrických obvodů 
+- neterminály - zapoj sériově/paralelně
+- terminály součástky
+
+## napsat program evolučním algoritmem - gramatická evoluce
+- máme gramatiku programu, přepisovací pravidla etc
+- jedinec je posloupnost čísel, která určují použitá pravidla a jejich pořadí
+- křížení - hodí se pamaovat, co se věnovalo jakému podvýrazu a měnit jen části přepisující ten stejný neterminál
+- 
+- 
