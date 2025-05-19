@@ -44,6 +44,8 @@ Cílem zpětnovazebního učení je naučit se takové chování agenta, které 
 - udělám akci a ve stavu s a dál pokračuju podle policy, zaznamenám odměnu a spočítám novou policy pro stav s, je to pomalé
 ### vysvětlit Q-učení (včetně vzorce pro aktualizaci matice Q)
 - Bellmanovy rovnice
+- ![image](https://github.com/user-attachments/assets/38d62e48-98b9-47f3-8981-78f481fd05f3)
+
 - ![image](https://github.com/user-attachments/assets/7854f96d-ea83-44ae-a2f0-8515fcc12422)
 - propagace užitku z cílových stavů do předcházejících
 - ![image](https://github.com/user-attachments/assets/1e53ce3f-42dd-48f0-b8a8-e8eae0b4bed0)
@@ -303,9 +305,16 @@ nezávislé na rotacích funkce, škálování
 
 # Rekurentní neuronové sítě
 ### definovat, co jsou rekurentní neuronové sítě
+- mají vnitní stav, typicky spojvedoucí zpět
 ### vysvětlit, kde se rekurentní sítě používají
+-  pokud mají být vstupem neuronové sítě posloupnosti různých délek, kde se jednotlivé položky ovlivňují
+-  pro předpovídání časových řad, strojový překlad, nebo generování textu
 ### vysvětlit trénování rekurentních sítí pomoci algoritmu zpětného šíření v čase
+- back-propagation - zkopírovat ji pro každý krok vstupu (a výstupu)
 ### vysvětlit problém s explodujícími a mizejícími gradienty
+- mohou být problémy - gradient z předchozí vrstvy se vždy násobí vahou, pokud je toto rekurentní váha, tak se opakovaně násobí tou samou hodnotou
+- explodující gradienty, mizející gradienty
+- dá se řešit dvěma způsoby - buď se rekurentní část sítě neučí vůbec - Echo state networks, nebo se rekurentní váha zafixuje na 1 a práce se stavem sítě se provádí explicitně jako v LSTM
 ### popsat princip Echo State sítí
 - ![image](https://github.com/user-attachments/assets/3e57f1fe-f08e-4cbe-8189-07bedbb7a68b)
 - na vstup dostane vektor délny $n$, přidá k tomu vnitřní stav délky $m$, hodí to do vnitřní vrstvy a dostane nový vnitřní stav
@@ -316,3 +325,135 @@ nezávislé na rotacích funkce, škálování
 - ![image](https://github.com/user-attachments/assets/b9131d7c-e801-4688-8dee-de1daa3ea14b)
 - místo neuronů LSTM buňky
 ### vysvětlit výhody Echo State sítí a LSMT sítí v porovnání se základními rekurentními sítěmi
+- LSTM má stav, s ním není přímo spojená váha - nemáme exploduící gradienty
+- LSTM sítě si umí zapamatovat delší posloupnosti vstupů než základní typu rekurentních sítí
+- ESN díky velikosti vnitřního stavu (který je často větší než počet vstupů), vlastně náhodně transformuje informaci ze vstupu do prostoru s větší dimenzí
+- další vrstvy se potom vlastně snaží tuto informaci rozkódovat a dostat z ní potřebné informace
+- vnitřní stav sítě závisí na všech předcházejících vstupech, nejen na tom posledním, a obsahuje tedy informace o všech z nich
+
+# Neuroevoluce
+### popsat použití evolučních algoritmů pro trénování vah v neuronové síti
+- nejjednoduší, fixní jedinec
+- problém spojit optimalizace
+- ke každému genu jedince se přičte náhodné číslo z normálního rozdělení s nulovou střední hodnotou a malých rozptylem (který je stejný pro všechny váhy)
+- **pro supervised lepší gradienty. pro zpětnovazební evoluce** protože můžeme paralelizovat na více jádrech
+- používá se i u řídkých odmn, u gradientu se změna pomalu propaguje, u evoluce nevadí, protože stejně z ní bude jen fitness na konci
+### popsat algoritmus NEAT - reprezentace jedince, operátory
+- **jedinec NEAT - seznam hran (odkud, kam, váha) s příznaky a inovačními čísly**
+- mutace - přidání neuronu, přidání hrany
+- křížení - jedinci, se “zarovnají” podle inovačních čísel
+- hrany se stejným inovačním číslem, které jsou v obou jedincích se dědí náhodně z jednoho nebo z druhého
+- hrany, které jsou jen v jednom jedinci se dědí z toho lepšího z těchto dvou
+- hrana v jednom jedinci neaktivní a v druhém aktivní - ve výsledku je aktivní/neaktivní s danou pravděpodobností
+### vysvětlit význam inovačních čísel v algoritmu NEAT
+- počítá se pomocí nich vzdálenost mezi jedinci, tedy druhy
+- na základě počtu stejných a různých genů (podle inovačních čísel) a podle podobnosti genů, které jsou v obou jedincích
+-  fitness každého jedince je vydělena počtem jedinců stejného druhu, a tím se dává nově objeveným myšlenkám (strukturám) čas pro to, aby se vylepšily pomocí genetických operátorů
+### popsat myšlenku algoritmu HyperNEAT
+- **topologie sítě se zafixuje na začátku** (typicky jako hyper-krychle)
+- **váhy se reprezentují pomocí jiné neuronové sítě**
+- neuronová síť **dostává na vstupu souřadnice neuronů** ve výsledné sítí a **vrací** pro ně přímo **váhy**
+- **síť pro výpočet vah** se potom **vytváří pomocí NEAT**
+
+- vytváří mnohem pravidelnější sítě než NEAT
+- je schopen vyvíjet větší sítě.
+
+### popsat rozšíření algoritmu NEAT pro hledání architektur neuronových sítí (algoritmus coDeepNEAT)
+- **jednotlivé uzly neobsahují jednotlivé neurony, ale přímo moduly neuronové sítě**
+- moduly jsou také vytvářeny pomocí NEAT algoritmu
+- při vyhodnocení fitness se celkový jedinec vytvoří pomocí kombinace těchto modulů, tak, jak je popsáno v jedinci
+### vysvětlit myšlenku algoritmu novelty search
+- vynechání fitness funkce, je nahrazena funkcí, která porovnává chování vytvořených jedinců (např. při hledání cesty v bludišti se může počítat vzdálenost pozic, kam jedinec došel, od pozic, kam došli jedinci před ním).
+### porovnat novelty search a evoluční algoritmy a diskutovat jejich výhody/nevýhody
+- kde klasická fitness funkce obsahuje složitá lokální optima se ukazuje, že novelty search dává dobré výsledky i z hlediska kvality nalezených řešení
+
+
+# Hluboké zpětnovazební učení
+### vysvětlit algoritmus hlubokého Q-učení
+### porovnat Q-učení a hluboké Q-učení
+- v Q-učení jsou hodnoty Q(s,a) reprezentovány jako matice Q
+- problematické, pokud je hodně stavů, nebo hodně různých akcí
+- v hlubokém Q-učení se tedy pro reprezentaci této matice používá neuronová síť, která **pro každý stav vrací ohodnocení všech akcí**
+- **chybová fuknce**
+- ![image](https://github.com/user-attachments/assets/ef619c4d-3cf4-4075-ad4b-590aa346702f)
+- minimaizujeme rozdíl mezi tím, co máme, a tím, co je nejlepí aktuálně
+- konkrétně střední čtvercová chyba rozdílu
+### popsat triky s experience replay a target network
+#### target network
+- **oddělíme síť pro výběr akce a síť pro odhad hodnoty**
+- zafixují se parametry sítě, podle které se vybírá akce, a měníme jen parametry sítě, která se učí ohodnocení
+- po daném počtu iterací se parametry obou sítí nastaví na stejné hodnoty a pokračuje se s trénováním podle stejného postupu
+- ![image](https://github.com/user-attachments/assets/4b821df7-0ede-4fb1-bf75-d619cce4ff15)
+- kde první výskyt Q jsou akční parametry
+#### experience replay
+- pamatujeme se čtveřice $(stav, akce, odměna, nový stav)$
+- při trénování náhodně vybíráme přechody z této paměti místo toho, abychom vždy používali poslední přechod
+- tím se zbavíme závislostí mezi po sobě jdoucími vstupy
+### vysvětlit vliv experience replay a target network na hluboké Q-učení
+- při trénování se ale často objevuje problém s tím, že měníme přímo funkci, která odhaduje Q a tím měníme i chování agenta a odhady zároveň, je ale vidět, že oba tyto aspekty spolu úzce souvisí - vlastně se snažíme učit funkci, kde se pořád mění vstupy i výstupy
+- pro zachování větší stability trénování
+- zbavíme se závislostí mezi po sobě jdoucími vstupy
+### popsat algoritmus DDPG
+- **místo počítání maxima síť, která vrátí akci**
+- spojitý prostor (auto)
+- ![image](https://github.com/user-attachments/assets/a80663a9-c4dc-49e0-ba6b-3a07ca9cdd15)
+### popsat actor-critic přístupy
+- advantage (výhoda), ta se spočítá jako rozdíl mezi provedením akce $a_t$ ve stavu $s_t$  hodnotou stavu $V(s_t)$
+- ![image](https://github.com/user-attachments/assets/02bb0a4e-3a39-4517-9c25-8dd5f08a8908)
+- **o kolik je lepší provést akci $a_t$ oproti obecné akci**
+- **nepotřebujeme Q a V, stačí V**
+- ![image](https://github.com/user-attachments/assets/3cca6e5d-a0f7-44e8-b8eb-920da1707bc5)
+- síť pro V říká, jak dobré sjou stavy, síť pro policy vybírá akce
+### popsat advantage a zdůvodnit, proč se používá
+### popsat metodu A3C
+- nahrazuje použití experience replay tím, že **sehraje více her najednou, aktualizace vah se potom průměrují** přes aktualizace spočítané ve všech nezávislých hrách
+
+# Particle Swarm Optimization
+### popsat aktualizaci poloh a rychlostí v PSO
+- každá částice jsou dva vektory - poloha a rychlost
+- každá si pamatuje svooji nejlepší polohu a nejlepší polohu v populaci
+  ![image](https://github.com/user-attachments/assets/667a8ed6-fa3b-4443-9614-b36c4bc30839)
+- $r$ jsou random parametry mezi 0 a 1
+- fí a omegy jsou předem dané parametry
+
+### popsat topologie používané v PSO (globální, geometrické, sociální)
+#### globální 
+všechny částice mohou přímo komunikovat se všemi
+#### lokáoní
+- částice mohou komunikovat jen s nějakou podmnožinou hejna, ta potom sdílí lokální nejlepší řešení
+#### geometrická
+- komunikují částice, které jsou blízko u sebe
+#### sociální
+- topologie určena předem, bez ohledu na pozice částic
+### vysvětlit vliv topologií na algoritmus PSO
+- u globální vetší náchylnost k lokálnímu optimu
+### vysvětlit použití PSO pro řešení problémů ve spojité optimalizaci
+- pozice částic přímo reprezentují kandidáty na řešení a jejich kvalita je určena podle hodnoty optimalizované funkce
+
+# Ant Colony Optimization
+### vysvětlit základní pojmy ACO - feromon, atraktivita
+#### feromon
+- vlastnost hrany na základě kvality řešení procházejících tou hranou
+#### atraktivita
+- heuristika hrany - třeba délka
+### popsat generování řešení pomocí ACO
+- mravenec začne v některém (náhodném) vrcholu grafu a rozhoduje se, do jakého vrcholu půjde dál
+- ![image](https://github.com/user-attachments/assets/b6986ee9-5ff0-4f23-8dbd-105b08751aaa)
+- závisí na feromonu a heuristice
+### popsat aktualizaci feromonu na základě kvality nalezeného řešení
+- ![image](https://github.com/user-attachments/assets/3354024d-6b06-4f07-861a-303c8bcaf32c)
+- ![image](https://github.com/user-attachments/assets/a6228807-b807-4b85-9657-224696247428)
+- L je kvalita mravence, tdy množství pokládaného feromonu, ró je vypařovací konstata
+### popsat použití ACO pro řešení problému obchodního cestujícího a vehicle routing problému
+
+# Artificial Life
+### vysvětlit rozdíly mezi jednotlivými typy umělého života (soft, hard, wet)
+### vysvětlit rozdíly mezi silným a slabým umělým životem
+### popsat 1D a 2D celulární automaty
+### popsat pravidla Game of Life
+### popsat pravidla Langtonova mravence
+### vysvětlit pojem dálnice u Langtonova mravence
+### popsat systém Tierra
+### popsat jedince v systému Tierra
+### vysvětlit způsob adresování (definování cílů skoku) v systému Tierra
+### popsat příklady vytvořených jedinců v sytému Tierra (paraziti)
