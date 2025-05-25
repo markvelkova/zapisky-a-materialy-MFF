@@ -172,8 +172,45 @@ return action
 
 ## Automated planning:
 ### Define planning domain and problem (representation of states, planning operator vs action, applicability and relevance of action, transition function, regression set).
+#### problém
+- $(doména, s_0, goal)$, kde doména jsou stavy, akce, tranziční funkce
+- ![image](https://github.com/user-attachments/assets/8ceac722-4373-4d4e-9eb8-469e584317c5)
+#### stav
+- **stav je set instancí atomů**, stavů je konečné množství
+- stav splňuje cíl, pokud splňuje všechny pozizivní atomy cíle a nesplňuje žádný negativní axon cíle
+
+#### transition funkce
+- γ(s, a) jak se zmeni stav aplikaci akce
+- a je applicable
+    – γ(s, a) = (s − effects−(a)) ∪ effects+(a)
+    – effects+(a) pozitiví efekty a
+    – effects−(a) negativní efeky a
+- a není applicable - γ(s, a) nedefinovaná
+
+#### operátor
+- trojice $(jmeno(o), předpoklady(o), efekty(o))$
+#### akce 
+- operátor, kde je za proměnné explicitně dosazeno
+#### applicable akce
+- poziivní předpoklady akce jsou podmnožinou stavu, s negativními není průnik
+#### relevatní k cíli
+- průnik cíle a efektů je neprázdný
+- efekty nejsou v konfliktu:
+![image](https://github.com/user-attachments/assets/9733aebc-acdd-4b19-9ff0-7befb40b9966)
+#### regression set
+![image](https://github.com/user-attachments/assets/1116da1d-4fbc-4b1b-8798-2f1cf1f0f44b)
 ### Explain progression/forward planning and regression/backward planning.
+![image](https://github.com/user-attachments/assets/7b13e603-a3c7-4e2e-9907-0fbaf138d1e6)
+- můžeme to dělat ideáln+ A*
+![image](https://github.com/user-attachments/assets/b394bbcf-17c7-4c4f-bea4-2eca12b857fe)
+- prohledává jen relevantní stavy
+- je těžší najít heuristiku
 ### Describe how planning can be realized by logical reasoning (situation calculus).
+- předpoklady implikují possibility akce
+- vlastnosti dalšího savu:
+![image](https://github.com/user-attachments/assets/f8544fa6-8068-481b-90ae-ef26bf9b0dab)
+- ptáme se ,zda existuje takový stav s, že jsou v něm splněny goal condiions
+
 
 ## Knowledge representation and probabilistic reasoning:
 - Define the core notions (event, random variable, conditional probability, full joint
