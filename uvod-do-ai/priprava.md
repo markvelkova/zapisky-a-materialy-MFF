@@ -1,0 +1,200 @@
+# Expected knowledge from course NAIL120 Introduction to Artificial Intelligence
+## Intelligent agents, environment, and structure of agents:
+### Define an agent and a rational agent.
+- agent je cokoli, co vnímá sensory okolí a provádí akce
+- racionální agent vybírá takovou akci, o které předpokládá, že bude maximalizovat jeho odměnu
+![image](https://github.com/user-attachments/assets/81461212-4ffe-4025-8985-289aab5cb8a8)
+### Explain properties of environment 
+- **partial/full observability**
+    - sensory vidí ompletní stav prostředí
+- **deterministic/stochastic**
+    - příští stav prostředí je určen předchozím stavem a provedenou akcí
+- **episodic/sequential**
+    - atomické epizody, další nezávisí na akcích v minulých epizodách
+- **static/dynamic**
+    - prostředí se nemění 
+- **discrete/continuous**
+     - stav prostředí, zpracování času, akce agenta
+- **single/multi-agent**
+    - agenti jsou ty entity, které můžeme popsat rovnicí výše
+### Explain and compare reflex and goal-based agent architectures
+#### reflex
+- na základě stavu světa vybere akci
+- ![image](https://github.com/user-attachments/assets/5e1426ea-4ea5-41a0-b99f-e20e7ba8e34e)
+#### goal based
+- zvažuje ještě cíl
+- ![image](https://github.com/user-attachments/assets/a548de3b-c206-402b-b66a-7f910ba3f75b)
+### possible representations of states (atomic, factored, structured).
+#### atomický stav
+- nedělitelný, bez vnitřní struktury, třeba v prohledávání
+#### factored
+- vektor hodnot - constrainy, výroková logika, plánování
+#### strukturovaný stav
+- množina objektů, které mají mezi sebou různé vztahy
+- predikátová logika
+
+## Problem solving and search:
+### Formulate a well-defined problem and its (optimal) solution, give some examples.
+- atomická reprezentace stavů
+- cíl je množina cílových stavů
+- akce popisují přechody mezi stavy
+- **úkol je najít sekvenci akcí, které vedou k cíli**
+- prohledávání
+- **agent je open loop**
+- **prostředí je celepozorovaelné, dirskrétní, statické a deterministické**
+![image](https://github.com/user-attachments/assets/4e0beddc-973d-42a6-b719-93b9dd1774b7)
+### Explain and compare tree search and graph search, discuss memory vs time.
+#### tree search
+- když je fronta prázdná, vrátím false, jinak si vyberu vrchol, poud goal..., pokud ne, dám jeho syny do fronty
+- může prozkoumáva jeden stav víckrát, pokud do nj dojde různými cestami
+#### graph search
+- přidává syny do fronty jen poud nejsou v navštívených
+
+### Explain and compare node selection strategies (depth-first, breadth-first, uniform-cost).
+| **Vlastnost**                   | **Prohledávání do šířky (BFS)**                               | **Prohledávání do hloubky (DFS)**                                                                                       |
+|--------------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| **Pořadí rozšiřování uzlů**     | Nejmenší neprozkoumaná hloubka (FIFO)                         | Nejhlubší neprozkoumaný uzel (LIFO)                                                                                      |
+| **Úplnost**                     | Úplné (při konečném faktoru větvení)                          | Úplné pro prohledávání grafu<br>Neúplné pro prohledávání stromu                                                          |
+| **Optimálnost**                | Optimální (pokud cena cesty neklesá s hloubkou)                | Neoptimální (lze upravit na optimální pomocí „branch-and-bound“)                                                        |
+| **Časová složitost**           | $O(b^d)$, kde b je faktor větvení a d je hloubka cílového uzlu   | $O(b^m)$, kde m je maximální hloubka jakéhokoliv uzlu (m může být výrazně větší než d)                                     |
+| **Paměťová složitost**         | $O(b^d)$                                                        | $O(bm)$                                                                                                                 |
+| **Paměťové nároky**            | Paměť je větší problém než samotný výpočet                     | Zpětné prohledávání: generuje se vždy jen jeden nástupce, paměť = $O(m)$                                                   |
+<br>**uniform cost je dijkstra**<br>
+### Informed (heuristic) search: explain evaluation function f and heuristic functionh, define admissible and monotonous heuristics and prove their relation.
+![image](https://github.com/user-attachments/assets/8b30ca36-0fde-473e-b2e2-d737e26df4a5)
+#### Přípustná heuristika (h(n))
+- heuristika mensi nebo rovna „ceny nejlevnější cesty z uzlu n do cíle“
+- optimistický pohled (algoritmus předpokládá lepší náklady, než jaké ve skutečnosti jsou)
+- funkce (f(n)) v algoritmu A* je dolní odhad nákladů cesty přes uzel (n)
+#### Monotonní heuristika (h(n))
+- nechť $n'$ je následník uzlu $n$ přes akci $a$ a $c(n, a, n')$ je cena přechodu
+- h(n) <= c(n, a, n') + h(n')
+- trojúhelníková nerovnost
+#### Monotonní heuristika je přípustná - důkaziště.
+
+Nechť $n_1, n_2, \ldots, n_k$ je optimální cesta z $n_1$ do cílového uzlu $n_k$, potom:
+
+$$
+h(n_j) - h(n_{j+1}) \leq c(n_j, a_j, n_{j+1}) \quad \text{(protože monotonie)}
+$$
+
+$$
+h(n_1) \leq \sum_{i=1}^{k-1} c(n_i, a_i, n_{i+1}) \quad
+$$
+
+### Describe A* algorithm and prove its properties (optimality for tree search and graph search).
+- dijkstra s heuristikou
+#### optimalita ve stromoprohledu - přípustnost
+- **první expandovaný cíl je optimální**
+- nechť $G2$ je neoptimální cíl objevený první a $C*$ je optimální cena
+
+$$
+f(G2) = g(G2) + h(G2) = g(G2) > C\*  \quad \text{(protože heurisitka cíle je 0)}
+$$
+
+- nechť $n$ je libovolný vrchol na optimální cestě
+
+$$
+f(n) = g(n) + h(n) = \leq C\*  \text{(protože přípustnost)}
+$$
+
+$$
+f(n)\leq C\*  < f(G2) 
+$$
+
+#### optimalita v grafoprohledu - monotonie
+- problém by mohl být, že bychom přišli do vrcholu podruhé lépe, ale to by se ignorovalo
+- s monotónní heuristikou nám ale $f(n)$ nikdy neklesá podél  jakékoli cesty
+- a* vybere ten s nejmenším $f$, ze všech otevřených cest nemůže být kratší než tato
+
+## Constraint satisfaction:
+### Define a constraint satisfaction problem (including the notion of constraint) and give some examples of CSPs.
+- **konečná množina proměnných**
+- **konečná množina hodnot pro každou proměnou - doména**
+- **konečná množina podmínek**, kde podmínka je relace přes podmnožinu proměnných, specifikuje povolené tupples například
+- **řešení je úplné konzistentní ohodnocení proměných**
+
+### Apply problem solving techniques to CSPs, explain why a given technique is appropriate for CSPs.
+
+### Explain principles of variable and value ordering and give examples of heuristics.
+### Define arc consistency and show an algorithm to achieve it (AC-3).
+### Define k-consistency and explain its relation to backtrack-free search; give anexample of a global constraint.
+### Explain forward checking and look ahead techniques.
+
+## Knowledge representation and propositional logic:
+- Define a knowledge-based agent.
+- Define a formula in propositional logic, describe conjunctive and disjunctive
+normal forms (and how to obtain them), define Horn clauses.
+- Explain the notions of model, entailment, satisfiability, and their relations.
+- Explain DPLL algorithm (including the notions of pure symbol and unit clause).
+- Explain resolution algorithm (and how it proves entailment) and explain forward
+and backward chaining as its special cases.
+
+## Automated planning:
+- Define planning domain and problem (representation of states, planning operator
+vs action, applicability and relevance of action, transition function, regression
+set).
+- Explain progression/forward planning and regression/backward planning.
+- Describe how planning can be realized by logical reasoning (situation calculus).
+
+## Knowledge representation and probabilistic reasoning:
+- Define the core notions (event, random variable, conditional probability, full joint
+probability distribution, independence).
+- Explain probabilistic inference (Bayes’rule, marginalization, normalization,
+causal direction, diagnostic direction).
+- Define Bayesian network, explain its relation to full joint probability distribution;
+describe a method for constructing Bayesian networks (explain chain rule);
+describe inference techniques for Bayesian networks (enumeration, variable
+elimination, rejection sampling, likelihood weighting).
+
+## Probabilistic reasoning over time:
+- Define transition and observation models and explain their assumptions.
+- Define basic inference tasks (filtering, prediction, smoothing, most likely
+explanation) and show how they are solved.
+- Define and compare Hidden Markov Model and Dynamic Bayesian Network.
+
+## Decision making:
+- Formalize rationality via maximum expected utility principle (define expected
+utility and describe relation between utility and preferences).
+- Define decision networks and show how the rational decision is done.
+- Define a sequential decision problem (Markov Decision Process and its
+assumptions) and its solution (policy); describe Bellman equation and
+techniques to solve MDP (value and policy iteration); formulate Partially
+Observable MDP and show how to solve it.
+
+## Adversarial search and games:
+- Explain core properties of environment and information needed to apply
+adversarial search.
+- Explain and compare mini-max and alpha-beta search.
+- Define an evaluation function and give some examples.
+- Describe how stochastic games are handled (expected mini-max).
+- Define single-move games, explain the notions of strategy, Nash equilibrium,
+Pareto dominance, explain Prisoner’s dilemma; define maximin technique and
+show some strategies for repeated games.
+- Mechanism design: explain classical auctions (English, Dutch, sealed bid) and
+tragedy of commons (and how it can be solved).
+
+## Machine learning:
+- Define and compare types of learning (supervised, unsupervised, reinforcement),
+explain Ockham’s Razor principle and diYerence between classification and
+regression.
+- Define decision trees and show how to lean them (including the definition of
+entropy and information gain).
+- Describe principles and methods for learning logical models (explain false
+negative and false positive notions, describe current-best-hypothesis and
+version-space learning).
+- Describe linear regression, show its relation to linear classification (define
+linearly separable examples) and artificial neural networks (describe
+backpropagation technique).
+- Explain parametric and non-parametric models, describe k-nearest neighbor
+methods and the core principles of Support Vector Machines (maximum margin
+separator, kernel function, support vector).
+- Describe and compare Bayesian learning and maximum-likelihood learning;
+describe parameter learning for Bayesian networks including expectationmaximization (EM) algorithm (explain the notion of hidden variable).
+- Formulate reinforcement learning problem, describe and compare passive and
+active learning; describe and compare methods of direct utility estimation,
+adaptive dynamic programming (ADP), and temporal diYerence (TD) for passive
+learning; explain the diYerence between model-based and model-free
+approaches; explain active version of ADP and the notions of greedy agent and
+exploration vs exploitation problem; describe exploration policies (random vs
+exploration function); describe and compare methods Q-learning (including Qvalue and its relation to utility) and SARSA.
