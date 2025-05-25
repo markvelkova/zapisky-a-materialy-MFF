@@ -115,27 +115,65 @@ $$
 - **řešení je úplné konzistentní ohodnocení proměných**
 
 ### Apply problem solving techniques to CSPs, explain why a given technique is appropriate for CSPs.
-
+#### backtracking
+- přiřaď hodnotu, když se to rozbije, vrať se a přiřaď jinak
+- dá se nsadno rozšířit, je korektní
 ### Explain principles of variable and value ordering and give examples of heuristics.
+- při backtrackingu zkouší hodnoty a vybírá proměnné v nějakém pořadí
+#### FAIL-FIRST - VARIABLE ORD
+- **dom** - nejmenší doména
+- **deg** - nejvíc podmínek
+
+#### SUCCEED-FIRST - VALUE ORD
+- například aby omezovala conejmene ostatnich proměnných
+- heuristiky specifické pro problém, obecně nelehký problém
 ### Define arc consistency and show an algorithm to achieve it (AC-3).
-### Define k-consistency and explain its relation to backtrack-free search; give anexample of a global constraint.
+- hrana je konzistentní právě tehdy, když pro každou hodnotu ve výchozím, najdu  následujícím vrcholu hodnotu, která splňuje podmínku
+![image](https://github.com/user-attachments/assets/d43224ec-fdcd-49f3-aa35-9c5f26226d83)
+#### AC-3 algoritmus
+- na počátku bylo slovo, teda fronta všech hran
+- dokud nneí prázdná, vyber hranu, zkontroluj, jesli obsahuje něco nekonzistentního, pokud ano a my jsme to odstranili z výchozího vrcholu, musíme přidat do front všechny sousedy výchozího vrcholu
+- čekáme, až bude fronta prázdná
+### Define k-consistency and explain its relation to backtrack-free search; give an example of a global constraint.
+![image](https://github.com/user-attachments/assets/77b88411-b0ac-4ae1-a17a-417f62d00352)
+- **pro konzistentní ohodnocení k-1 proměnných garantujeme konzistenní ohodnocení k-té**
+![image](https://github.com/user-attachments/assets/f5137c3e-58d6-41a2-8fcd-43fa661a59df)
+- *Pokud je problém pro všechna i do n i-konzistentní, pak se dá vyřešit bez backtracku*
+- ale časová komplexita k-konzistence je exponenciální v k
 ### Explain forward checking and look ahead techniques.
+#### forward checking
+- když přiřadím hodnotu, odtsraním všechny varianty, které to zablokovalo - u královen disable všechna políčka, kam poslední přidaná útočí
+#### look ahead
+- po každém přiřazení obnov konzistenci
+- nedívá se jen na přímé sousedy jako forward
 
 ## Knowledge representation and propositional logic:
-- Define a knowledge-based agent.
-- Define a formula in propositional logic, describe conjunctive and disjunctive
-normal forms (and how to obtain them), define Horn clauses.
-- Explain the notions of model, entailment, satisfiability, and their relations.
-- Explain DPLL algorithm (including the notions of pure symbol and unit clause).
-- Explain resolution algorithm (and how it proves entailment) and explain forward
-and backward chaining as its special cases.
+### Define a knowledge-based agent.
+- má knowledge base (dále studnice vědomostí), a counter
+```
+TELL (studnice, make_percept_sentence(percept, t))
+action = ASK (studnice, make_action_query(t))
+TELL (studnice, make_action_sentence(action)
+t++
+return action
+```
+### Define a formula in propositional logic, describe conjunctive and disjunctive normal forms (and how to obtain them), define Horn clauses.
+- netřeba
+### Explain the notions of model, entailment, satisfiability, and their relations.
+- netřeba
+### Explain DPLL algorithm (including the notions of pure symbol and unit clause).
+- netřeba
+### Explain resolution algorithm (and how it proves entailment) and explain forward and backward chaining as its special cases.
+- když mám hornovské klauzule, můžu udělat resoluci v lineárním čase
+#### forward chaining
+![image](https://github.com/user-attachments/assets/8af946ce-a5c3-4bd9-bf4c-743dad25b789)
+#### backward chaining
+![image](https://github.com/user-attachments/assets/aa08b0cb-d2c0-4ca5-b64c-eebf4a688e2d)
 
 ## Automated planning:
-- Define planning domain and problem (representation of states, planning operator
-vs action, applicability and relevance of action, transition function, regression
-set).
-- Explain progression/forward planning and regression/backward planning.
-- Describe how planning can be realized by logical reasoning (situation calculus).
+### Define planning domain and problem (representation of states, planning operator vs action, applicability and relevance of action, transition function, regression set).
+### Explain progression/forward planning and regression/backward planning.
+### Describe how planning can be realized by logical reasoning (situation calculus).
 
 ## Knowledge representation and probabilistic reasoning:
 - Define the core notions (event, random variable, conditional probability, full joint
