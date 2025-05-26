@@ -359,6 +359,16 @@ return action
 ![image](https://github.com/user-attachments/assets/b00f649a-d3e4-48d3-9836-326ad79ea8c1)
 ![image](https://github.com/user-attachments/assets/a7deff11-9cb8-4ad4-9e83-99392a9e2e08)
 #### formulate Partially Observable MDP and show how to solve it.
+- **přechodový model $P(s'|s,a)$**
+- **akce aplikovatelné ve stavu $A(s)$**
+- **odměna $R(s)$**
+- **sensorový model $P(s|e)$**
+- můžeme použít belief states místo normálních (pravděpodobostní distribuce přes všechny stavy)
+- ![image](https://github.com/user-attachments/assets/fe8abe48-9d22-44ab-96e0-d837287bf77b)
+- použijeme dynamickou rozhodovací síť
+- počítáme belief state filteringem
+- podobné jako ExpectedMiniMax
+
 
 ## Adversarial search and games:
 - Explain core properties of environment and information needed to apply
