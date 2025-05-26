@@ -371,38 +371,156 @@ return action
 
 
 ## Adversarial search and games:
-- Explain core properties of environment and information needed to apply
-adversarial search.
-- Explain and compare mini-max and alpha-beta search.
-- Define an evaluation function and give some examples.
-- Describe how stochastic games are handled (expected mini-max).
-- Define single-move games, explain the notions of strategy, Nash equilibrium,
-Pareto dominance, explain Prisoner’s dilemma; define maximin technique and
-show some strategies for repeated games.
-- Mechanism design: explain classical auctions (English, Dutch, sealed bid) and
-tragedy of commons (and how it can be solved).
+### Explain core properties of environment and information needed to apply adversarial search
+- nejčastěji máme deterministické hry s úplnou informací pro dva hráče
+- hledáme strategii - počáteční tah a pak tahy pro všechny nadcházející stavy, kam nás dostane oponent
+- optimální strategie je nejlepší možná ve hře s bezchybným oponentem
+### Explain and compare mini-max and alpha-beta search.
+- minimax je nepraktický pro reálné hry
+- prohledává příliš velký prostor
+- ![image](https://github.com/user-attachments/assets/03042c26-19a6-4916-b25a-0cb9bfd29ab6)
+- typek nahore maximalizuje, pod korenem minimalizuje
+- $\alpha$ je nejlepší zatím maximum, $\beta$ je nejlepší zatím minimum
+### Define an evaluation function and give some examples.
+- vrací pro stav předpokládaný užitek
+- něco jako heuristika, když nemůžeme dopočíat hru do konce (třeba počet cenných figur v šachách)
+### Describe how stochastic games are handled (expected mini-max).
+![image](https://github.com/user-attachments/assets/02bf12c3-6c55-4e78-91dd-d8def4911b20)
+- ve stromečku s námi hraje ještě šance
+### Define single-move games, explain the notions of strategy
+- **máme hráče**, kteří dělají rozhodnutí
+- **akce**, prováděné hráči
+- **payoff** funkci, která na základě kombinace všech akcí dá odměnu hráům
+- **strategie** - může být **pure** (deterministická) nebo **mixed** (pravděpodobnostní)
+- řešení je přiřazení racionální strategie každému hráči
+#### Nash equilibrium
+- pokud všichni zůstanou tak, jak jsou, nikomu se nevyplatí samotnému změnit strategii
+#### Pareto dominance
+- jeden výsledek je dominovaný druhým, pokud by všichni preferovali ten druhý
+- pareto optimalita je, pokud není žádný výsledek, který by všichni preferovali
+#### explain Prisoner’s dilemma 
+![image](https://github.com/user-attachments/assets/afceb4a4-418e-4ddc-9508-6221f368e643)
+- dominantní ekvilibrium (přiznat PŘIZNAT!!!)
+- je paterodominované variantou  (ZATLOUKAT, ZATLOUKAT)
+#### define maximin technique
+
+#### show some strategies for repeated games
+- máme vězňovo dilema stokrát za sebou - pořád je racionální se přiznat
+- ale, pokud hráči mají 99% že spolu budou hrát znovu, je lepší **perpetual punishment neboli věčné utrpení** (alias zkouškové) - hráč zatlouká, dokud druhý poprvé nezahraje testify
+- **tit-for-tat** začni se zaloukáním a opakuj potom tahy druhého hráče
+### Mechanism design
+#### classical auctions (English, Dutch, sealed bid) 
+- chceme, aby všichni měli domainantní strategii a tedy, aby to bylo rychlé
+- maximalizujeme očekávaný prospěch prodávajícího a global utility, teda aby vyhrál ten, kdo si tu věc cení nejvýš
+##### anglická aukce
+- začíná na minimu a jde nahoru
+- jednoduchá dominantní strategie - dokud to není nad tvvoji value, tak přihazuj
+- může potlačovat konkurenci (vidím Muska) a má vysoké nároky na rychlost připojení například
+##### holandská aukce
+- jde s cenou dolů v čase - kytky, ovoce
+##### sealed-bid
+- obálková
+- nemá dominantní strategii
+- varianta, kde se platí druhá nejvyšší cena má dominantní strategii - vsaď svoji value
+#### tragedy of commons (and how it can be solved).
+- vzduch, obecní louka
+- musíme je zdanit
+- algoritmus
+    - každý agent nahlásí svou cenu $b_i$
+    - centrum alokuje prostředky podmnožině agentů a chce maximalizovat, kolik za ně dostane
+    - každý agent zaplatí daň $W - B$, kde W je součet ostatních z podmnožiny bez tohoto hráče, a B součet všech ostatních podmnožině i mimo, bez tohoto hráče
+    - tedy každý v podmnožině platí nejvyšší cenu mimo podmnožinu
+    - lidi mimo podmnožinu nic
+    - dominantní strategie je vrazit tam naši pravou hodnotu
 
 ## Machine learning:
-- Define and compare types of learning (supervised, unsupervised, reinforcement),
-explain Ockham’s Razor principle and diYerence between classification and
-regression.
-- Define decision trees and show how to lean them (including the definition of
-entropy and information gain).
-- Describe principles and methods for learning logical models (explain false
-negative and false positive notions, describe current-best-hypothesis and
-version-space learning).
-- Describe linear regression, show its relation to linear classification (define
-linearly separable examples) and artificial neural networks (describe
-backpropagation technique).
-- Explain parametric and non-parametric models, describe k-nearest neighbor
-methods and the core principles of Support Vector Machines (maximum margin
-separator, kernel function, support vector).
-- Describe and compare Bayesian learning and maximum-likelihood learning;
-describe parameter learning for Bayesian networks including expectationmaximization (EM) algorithm (explain the notion of hidden variable).
-- Formulate reinforcement learning problem, describe and compare passive and
-active learning; describe and compare methods of direct utility estimation,
-adaptive dynamic programming (ADP), and temporal diYerence (TD) for passive
-learning; explain the diYerence between model-based and model-free
-approaches; explain active version of ADP and the notions of greedy agent and
-exploration vs exploitation problem; describe exploration policies (random vs
-exploration function); describe and compare methods Q-learning (including Qvalue and its relation to utility) and SARSA.
+### Define and compare types of learning (supervised, unsupervised, reinforcement), explain Ockham’s Razor principle and diYerence between classification and regression.
+#### s učitelem
+- zadané vstupy i výstupy
+- učí se funkci **hypotézy**, která aproximuje reálnou funkci
+- Occamova břitvička
+- *Entia non sunt multiplicanda praeter necessitatem.
+tj. Entity se nemají zmnožovat více, než je nutné.*
+#### bez učitele
+- zadané jen vstupy - generuj podobné, poznávej, rozděl do skupin
+#### zpětnovazební
+- maximlalizuj odměnu v prostředí
+#### regrese vs klasifikace
+- číselná hodnota vs kategorie
+
+### Define decision trees and show how to learn them (including the definition of entropy and information gain).
+- učení s učitelem
+- sežere vektor vstupu a vrátí jeden výstup
+- udělá sekvenci testů a dospěje k řešení
+![image](https://github.com/user-attachments/assets/a9dbac10-c665-4153-b3fd-efa470928124)
+- při stavění chceme vždy větvit podle toho atributu, který na základě **entropie** přinese největší **information gain**, podstromy rekurzivně
+- ![image](https://github.com/user-attachments/assets/3eb0880a-5896-4aac-a14e-15094db26d01)
+![image](https://github.com/user-attachments/assets/e94bf9b6-7be7-4f99-a324-2bd9300b11d9)
+- p je počet pozitivních, n je počet negativních zástupců
+- remainder je vysčítání přes druhy, B je pro všechno na jedné hromadě
+
+### Describe principles and methods for learning logical models (explain false negative and false positive notions, describe current-best-hypothesis and version-space learning).
+- hledáme ultimátní logickou formuli místo stromu
+### Describe linear regression, show its relation to linear classification (define linearly separable examples) and artificial neural networks (describe backpropagation technique).
+#### jakým způsobem počítá jeden perceptron
+- f je funkce, která pro x<0 vrací 0 a jinak 1 **signum**
+- ![image](https://github.com/user-attachments/assets/ce6a39df-1ba9-4a84-a336-57f9e306cc61)
+#### algoritmus pro trénování perceptronu
+![image](https://github.com/user-attachments/assets/9226035a-2c99-401d-a78d-e740c5e53874)
+- lineárně separabilní třídy, pak konverguje
+#### struktura vícevrstvých perceptronových sítí
+- první vrstva na vstup, další skryté na sebe, výstupní 
+#### aktivační funkce používané ve vícevrstvých perceptronech (sigmoida, tanh, ReLU)
+- **relu** ![image](https://github.com/user-attachments/assets/80b33ea9-1f47-49c2-8d38-16b0f213072e)
+- **sigmoida** ![image](https://github.com/user-attachments/assets/f192e808-4cf1-4782-9269-5ffed7c2ed05) - dává od 0 do 1
+- **hyperbolický tangens** - dává od -1 k 1
+#### backpropagation
+- ![image](https://github.com/user-attachments/assets/5773ce0a-61af-4791-ab22-374244938bdc)
+- L je chybová fuknce
+- alfa je parametr učení
+
+### Explain parametric and non-parametric models, describe k-nearest neighbor methods and the core principles of Support Vector Machines (maximum margin separator, kernel function, support vector).
+
+### Describe and compare Bayesian learning and maximum-likelihood learning; describe parameter learning for Bayesian networks including expectationmaximization (EM) algorithm (explain the notion of hidden variable).
+
+### Formulate reinforcement learning problem
+#### intuitivně
+Cílem zpětnovazebního učení je naučit se takové chování agenta, které maximalizuje jeho celkovou odměnu, kterou získá z prostředí, pokud bude dané chování používat. Předpokládáme, že agent se vyskytuje v nějakém prostředí, jehož stav může pozorovat a ovlivňovat. Agent běží v cyklech, v každé iteraci $t$ pozoruje stav prostředí $s_t$, na základě pozorování provede akci $a_t$ a tím převede prostředí do nového stavu $s_{t+1}$. Za provedení akce dostane od prostředí odměnu $r_t$.
+#### prostředí jako Markovský rozhodovací proces
+- **čtveřice $(S, A, P, R)$**
+- **Stavy, Akce, Přechody**(pravděpodobnosti)**, Odměny**
+- pechodová funkce nezávisí na historii jen na aktuálním stavu a akci
+-  agent má policy, která říká pravděpodobnost, že ve stavu udělá akci
+-  celková suma se počítá s diskontním faktorem $\gamma^t$ aby klesala
+#### hodnota stavu a hodnota akce
+-  $V$ je střední hodnota oděny, pokud začínáme v tomhle stavu a jdeme dál
+-  ![image](https://github.com/user-attachments/assets/812165cf-7112-41b7-ac86-b45f0e752783)
+- navíc su budeme udržovat ![image](https://github.com/user-attachments/assets/065a3735-aa40-4227-8b9b-7b681fbc8a35) což je hodnota akce v tom stavu, pokud budeme dál udržovat policy pí
+- **agent hledá optimální strategii maximalizující užitek stavů**
+
+
+### describe and compare passive and active learning
+
+### describe and compare methods of direct utility estimation, adaptive dynamic programming (ADP), and temporal diYerence (TD) for passive learning
+
+### explain the diYerence between model-based and model-free approaches
+
+### explain active version of ADP and the notions of greedy agent and exploration vs exploitation problem
+
+### describe exploration policies (random vs exploration function)
+
+### describe and compare methods Q-learning (including Qvalue and its relation to utility) and SARSA.
+#### Q-učení
+- Bellmanovy rovnice
+- ![image](https://github.com/user-attachments/assets/38d62e48-98b9-47f3-8981-78f481fd05f3)
+
+- ![image](https://github.com/user-attachments/assets/7854f96d-ea83-44ae-a2f0-8515fcc12422)
+- propagace užitku z cílových stavů do předcházejících
+- ![image](https://github.com/user-attachments/assets/1e53ce3f-42dd-48f0-b8a8-e8eae0b4bed0)
+- mám na začátku samé nuly v amtici. Pozoruju stav $s_t$ porvedu akci $a_t$, dostanu odměnu $r_t$ a posunu se do $s_{t+1}$.
+- alfa je parametr učení
+- nové políčko je to, co mám + reward + maximum z toho, co můžu získat z nového políčka
+#### popsat algoritmus SARSA
+![image](https://github.com/user-attachments/assets/1125d017-db1d-409d-87e5-75e89c14ad10)
+- máme policy a víme, co budeme dělat v dalším tahu, odpadá tedy maximalizace, minus v závorce je, protože na začátku není 1-alfa
+
