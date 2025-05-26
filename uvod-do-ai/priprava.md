@@ -322,13 +322,43 @@ return action
 - ![image](https://github.com/user-attachments/assets/965233cf-fe8b-447b-a150-b0dc047060e7)
 
 ## Decision making:
-- Formalize rationality via maximum expected utility principle (define expected
-utility and describe relation between utility and preferences).
-- Define decision networks and show how the rational decision is done.
-- Define a sequential decision problem (Markov Decision Process and its
-assumptions) and its solution (policy); describe Bellman equation and
-techniques to solve MDP (value and policy iteration); formulate Partially
-Observable MDP and show how to solve it.
+### Formalize rationality via maximum expected utility principle 
+#### expected utility
+- máme nějakou funkci užitku
+- předpokládaný užitek akce na základě evidence je vážený součet užitků stavů, kam nás ta akce může dostat
+- ![image](https://github.com/user-attachments/assets/6186624d-0439-477c-b07b-e716b6ac6ded)
+#### relation between utility and preferences
+- často nevíme pesně číslo užitku, ale umíme porovnat dvě akce
+- nastavíme nejlepší na možnosti užitek 1 a nejhorší užitek 0
+- necháme agenta, aby si vybral mezi S a stadatrní loterií ,kde nejlepší má pravděpodobnost $p$, nejhorší $1-p$
+- v momentě, kdy je agent nerozhodný nastavím užitek S na $p$
+### Define decision networks
+- je to Baysovská síť, kde jsou navíc rozhodovcí vrcholy
+![image](https://github.com/user-attachments/assets/13d8713b-569d-4a1e-b44a-1f71c3d0a6c4)
+#### show how the rational decision is done
+- vyzkouším všechny varianty těch rozhodovacích a vyberu kombinaci, která dá nejlepší užitek
+### Define a sequential decision problem 
+- máme plně pozorovatelné, ale nedeterministické prostředí
+- hledáme plán, který nám přinese maximální užitek
+#### Markov Decision Process its assumptions
+- **plně pozorovatelné stochastické prostředí s Markovovým přechodovým modelem a odměnou**
+- $P(s'|s,a)$ pravděpodobnost, že mě akce přeese z s do s'
+- $R(s)$ odměna za stav
+- $U([s_0,s_1,s_2...]) = R(s_0) + \gamma R(s_1) + \gamma ^2 R(s_2)...
+- $\gamma$ je diskontní faktor, vdálená budoucnost je nejistá a nezajímá nás tolik. Je tam taky proto, aby konvergovaly iteration algoritmy
+##### its solution (policy)
+- funkce $\pi (s)$, která vrací akci pro každý stav
+- optimální je taková, která dává největší **expected** užitek
+- ![image](https://github.com/user-attachments/assets/ee41ba2b-1be8-4b5e-8c1d-bc21320347c1)
+![image](https://github.com/user-attachments/assets/4f3c57a1-1448-46dc-8315-b278f33c45de)
+- nám dává pravý užitek stavu
+#### describe Bellman equation
+![image](https://github.com/user-attachments/assets/cbc0722b-9f65-41e9-94e4-b8c1b8d858df)
+- odměna za stav a to nejlepší rozložení odměn sousedů
+#### techniques to solve MDP (value and policy iteration)
+![image](https://github.com/user-attachments/assets/b00f649a-d3e4-48d3-9836-326ad79ea8c1)
+![image](https://github.com/user-attachments/assets/a7deff11-9cb8-4ad4-9e83-99392a9e2e08)
+#### formulate Partially Observable MDP and show how to solve it.
 
 ## Adversarial search and games:
 - Explain core properties of environment and information needed to apply
