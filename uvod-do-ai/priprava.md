@@ -461,7 +461,21 @@ tj. Entity se nemají zmnožovat více, než je nutné.*
 
 ### Describe principles and methods for learning logical models (explain false negative and false positive notions, describe current-best-hypothesis and version-space learning).
 - hledáme ultimátní logickou formuli místo stromu
+- attributy jsou unární predikáty, výsledek taky
+- můžeme mít obr disjunkci všech variant, ale spíš cheme jednu hypotézu
+#### falešně negativní
+- musíme pustit podmínku nebo přidat disjunkci
+#### falešně pozitivní
+- přidat podmínku nebo odebrat disjunkci
+![image](https://github.com/user-attachments/assets/c3793be2-ac67-4c74-9a83-865da00ec4db)
+#### version space
+- začnu s množinou všech hypotéz a jenom vyhazuju nekonzistentní věci
+- ![image](https://github.com/user-attachments/assets/6136f137-0caa-4fb3-b865-febe63e2f932)
+
 ### Describe linear regression, show its relation to linear classification (define linearly separable examples) and artificial neural networks (describe backpropagation technique).
+- hledáme lineární funkci, která má nejmenší chybu
+- ![image](https://github.com/user-attachments/assets/cfe0b7d9-6113-4ad8-be84-127eac0aaabd)
+- kde $y = w_1*x + w_0$
 #### jakým způsobem počítá jeden perceptron
 - f je funkce, která pro x<0 vrací 0 a jinak 1 **signum**
 - ![image](https://github.com/user-attachments/assets/ce6a39df-1ba9-4a84-a336-57f9e306cc61)
@@ -480,9 +494,41 @@ tj. Entity se nemají zmnožovat více, než je nutné.*
 - alfa je parametr učení
 
 ### Explain parametric and non-parametric models, describe k-nearest neighbor methods and the core principles of Support Vector Machines (maximum margin separator, kernel function, support vector).
+#### parametric model
+- když máme natrénovanou síť, můžeme zahodit trénovací data, protože jsou reprezentována váhami
+#### non-parametric
+- budeme si hypoézu reprezentovat daty
+#### k-nearest neighbours
+![image](https://github.com/user-attachments/assets/705998d6-6c52-4a9c-927e-e87adbfdbf17)
+- rozhodne se podle nejbližších sousedů, buď to určí třídu, nebo se nějak vyprůměruje hodnota
+- Minkowskeho vzdálenost
+- ![image](https://github.com/user-attachments/assets/ead0c5b9-ddf0-4422-a290-0407a0f227ae)
+#### support vector machine
+- maximum margin separator - umístit dělící čáru tak, aby kolem byl co nejširší pruh - lepší generalizace, **support vectors jsou vzorky blízko hranice**
+![image](https://github.com/user-attachments/assets/47b26c89-6bc5-468f-8ba2-341472641512)
+- když nejsou lineárně separabilní, můžu si je kernel funkcí namapovaz do další dimenze, kde jsou
+![image](https://github.com/user-attachments/assets/18579d89-3947-45e1-b193-110b1cad4e65)
 
-### Describe and compare Bayesian learning and maximum-likelihood learning; describe parameter learning for Bayesian networks including expectationmaximization (EM) algorithm (explain the notion of hidden variable).
-
+### Describe and compare Bayesian learning and maximum-likelihood learning
+- mám víc hypotéz
+- **vím, že existují právě tyhle typy sáčků**
+- ![image](https://github.com/user-attachments/assets/5146664a-db56-4e48-b3d0-39c45ec7bdbc)
+- používám všchny, přijdou data, spočítám pravdpodonbnost hypotézy na základě dat
+![image](https://github.com/user-attachments/assets/a03f32b7-4b11-4367-b759-a03f0b74dcc7)
+- udělám predikci dalšího ujako vážený průměr predikcí podle hypotéz
+![image](https://github.com/user-attachments/assets/77c6fd5b-88ba-4cd3-9df1-f83a9e22a0a0)
+#### describe parameter learning for Bayesian networks
+- neznáme procenta, **neznámý typ sáčků**
+- ![image](https://github.com/user-attachments/assets/72971682-64c1-4456-8f0c-8091cfd92b81)
+- vlastně maximlizuju tuhle funkci
+- udělám derivaci podle $\phi$ a hledám, kde je rovna nule
+#### expectation maximization (EM) algorithm (explain the notion of hidden variable)
+![image](https://github.com/user-attachments/assets/3d195656-7979-40a5-bc16-b355a79bcb00)
+- chceme se naučit podmíněnou distribuci té skryté proměnné
+- budeme předsírat, že ji známe
+- EXPECTATION - hodíme tam naši tipnutou hodnotu
+- MAXIMALIZATION - upravíme parametry tak, aby se zvýšila pravděpodobnost modelu
+- opakuj do konvergence
 ### Formulate reinforcement learning problem
 #### intuitivně
 Cílem zpětnovazebního učení je naučit se takové chování agenta, které maximalizuje jeho celkovou odměnu, kterou získá z prostředí, pokud bude dané chování používat. Předpokládáme, že agent se vyskytuje v nějakém prostředí, jehož stav může pozorovat a ovlivňovat. Agent běží v cyklech, v každé iteraci $t$ pozoruje stav prostředí $s_t$, na základě pozorování provede akci $a_t$ a tím převede prostředí do nového stavu $s_{t+1}$. Za provedení akce dostane od prostředí odměnu $r_t$.
@@ -498,16 +544,42 @@ Cílem zpětnovazebního učení je naučit se takové chování agenta, které 
 - navíc su budeme udržovat ![image](https://github.com/user-attachments/assets/065a3735-aa40-4227-8b9b-7b681fbc8a35) což je hodnota akce v tom stavu, pokud budeme dál udržovat policy pí
 - **agent hledá optimální strategii maximalizující užitek stavů**
 
-
 ### describe and compare passive and active learning
+- passive má fixed policy ajen se učí hodnoty stavů (SARSA)
+- active se učí i policy (Q-učení)
 
 ### describe and compare methods of direct utility estimation, adaptive dynamic programming (ADP), and temporal diYerence (TD) for passive learning
+#### direct utiliy estimation
+- doběhnu do konce a každý stav má hodnotu součet odměn od sebe dál
+- udržuju si průměr, protože to může vyjít různě pro různé testy
+- **koverguje pomalu** prozkoumává i varianty, které nejsou v souladu s Bellmanem
+- ![image](https://github.com/user-attachments/assets/d1254909-3c87-426f-a439-87aba7efd3f1)
+- **utility stavů totiž nejsou nezávislé**
+#### ADP
+- z pozorování se učí přechodovou funkci (prostě počítá frekvenci, co kdy následovalo) a odměny
+- užitek počítá z Bellmanových rovnic, třeba value iteration
 
-### explain the diYerence between model-based and model-free approaches
+#### temporal difference
+- můžeme sipoupravovat utility tak, aby splňovaly rovnice pomocí pozorovaných přechodů
+- předpoklad, že $U(1,3) = 0.84$ a $U(2,3) = 0.92$
+- pokud vždycky je právě tenhle přechod, můžeme předpokládat, že by mělo platit $U(1,3) = -0.04 + U(2,3)$, což by dávalo $U(1,3) = 0.88$
+- můžeme tedy zvůšit $U(1,3)$
+- ![image](https://github.com/user-attachments/assets/ffe96514-9dbb-47e3-be4e-e28ffd3923f7)
 
+### explain the difference between model-based and model-free approaches
+- model free je Q-učení - nepotřebuje přechodový model, stačí jen Q hodnoty
+- model based potebuje přechodový model - třeba temporal difference
 ### explain active version of ADP and the notions of greedy agent and exploration vs exploitation problem
+- nemá ani policy, bere nejvýhodnější akci - to je jeho policy
+- ale měl by vždycky brát to aktuálně nejlepší?
+- to, co je nejlpší v našem modelu nemusí bý nejlepší v prostředí
 
 ### describe exploration policies (random vs exploration function)
+- jednou za čas udělá random akci - pomalu konverguje
+- exploration funkce - $f(u,n)$  určuje poměr hamižnosti a zvědavosti
+      - n je kolikrát jsme tam byli, u je užitek
+![image](https://github.com/user-attachments/assets/b43831d4-2f6f-42b4-85d8-6767b6a618ec)
+
 
 ### describe and compare methods Q-learning (including Qvalue and its relation to utility) and SARSA.
 #### Q-učení
