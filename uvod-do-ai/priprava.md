@@ -212,21 +212,114 @@ return action
 - ptáme se ,zda existuje takový stav s, že jsou v něm splněny goal condiions
 
 
+
 ## Knowledge representation and probabilistic reasoning:
-- Define the core notions (event, random variable, conditional probability, full joint
-probability distribution, independence).
-- Explain probabilistic inference (Bayes’rule, marginalization, normalization,
-causal direction, diagnostic direction).
-- Define Bayesian network, explain its relation to full joint probability distribution;
-describe a method for constructing Bayesian networks (explain chain rule);
-describe inference techniques for Bayesian networks (enumeration, variable
-elimination, rejection sampling, likelihood weighting).
+### Define the core notions 
+#### event - jev
+- množina elementaárních jevů
+#### random variable
+- má doménu, třeba kostka 1 má doménu {1,2,3,4,5,6}
+#### conditional probability
+![image](https://github.com/user-attachments/assets/78880fee-3473-4284-8706-8672d31ca82b)
+#### full joint probability distribution
+- tabulka se všemi možnostmi, jak se to může nakombit
+- ![image](https://github.com/user-attachments/assets/406e4300-d01e-4a62-bb2f-2068e51ada0f)
+#### independence
+### Explain probabilistic inference 
+![image](https://github.com/user-attachments/assets/fa5d173d-6ed8-4dc6-ae6a-975c43a36c9e)
+- Y nás zajímají, E víme, H nás nezajímají a musíme to projet přes všechny jejich možnosti
+#### Bayes’rule 
+![image](https://github.com/user-attachments/assets/d9e75365-5631-4c73-9378-8a7d4a0f6ac6)
+#### marginalization
+- vysčítání přes elementární jevy
+![image](https://github.com/user-attachments/assets/50fe079a-c67c-4688-af27-e69bd26aa154)
+#### normalization
+- máme evdence a počítáme pravděpodobnos jevu
+![image](https://github.com/user-attachments/assets/fde97654-75f7-438f-9f1b-fa10f54bd69f)
+- kdž to spočítám pro všechny jevy, musí se to sečíst na jedničku
+![image](https://github.com/user-attachments/assets/fe419baa-4f7d-4685-82a8-1a603c833960)
+- takže $P(E-e)$ nemusím počítat, hodím tam alfu
+![image](https://github.com/user-attachments/assets/178c36bf-5133-4ae8-8625-410d11da9a03)
+![image](https://github.com/user-attachments/assets/0927cbfe-c734-4277-90b6-b39a224c7c12)
+#### causal direction vs diagnostic direction
+![image](https://github.com/user-attachments/assets/7368094d-a228-4d6e-8c2a-8e0e9828e234)
+
+### Define Bayesian network etc
+#### bayesovska síť
+- využívá podmíněné nezávislosti
+- je to DAG
+- vrcholy jsou random vars, každý vrchol má svoji tabulku podmíněné pravděpodonosti na základě rodičů
+- beru vrcholy a cokoli, co s nimi souvisí, do nich zapojím
+#### explain its relation to full joint probability distribution
+- reprezentuje ji
+- 
+![image](https://github.com/user-attachments/assets/54c41e18-cee6-40a5-9038-4f9b6730b6c5)
+#### explain chain rule
+![image](https://github.com/user-attachments/assets/b6704e93-6750-405f-9ab5-d261551a7ec6)
+### describe inference techniques for Bayesian networks 
+- o je to s hidden proměnnýma
+![image](https://github.com/user-attachments/assets/da910934-79ca-404c-aa11-83f5124fa951)
+- $P(X,e,y)$:
+![image](https://github.com/user-attachments/assets/323e66d9-358d-4755-ae12-3096786a20d9)
+![image](https://github.com/user-attachments/assets/81a37805-448a-4eaf-bed8-3e060d31a196)
+#### enumeration
+- to o jeden nadpis výš, opakuje stejné části víckrát, není efektivní
+- když so to uložíme, máme dynamické programování
+#### variable elimination
+![image](https://github.com/user-attachments/assets/d5f1ceb5-aec0-42af-929c-4268042da7a4)
+#### rejection sampling
+- vyhodíme nekonzstentní s evidence
+#### likelihood weighting
+- zafixujeme evidence
+- výsledek má váhu podle pravděpodobnosti evidence vůči vzorku
+![image](https://github.com/user-attachments/assets/71dd8bf7-cc77-47b9-a1be-074104f71e68)
+
 
 ## Probabilistic reasoning over time:
-- Define transition and observation models and explain their assumptions.
-- Define basic inference tasks (filtering, prediction, smoothing, most likely
-explanation) and show how they are solved.
-- Define and compare Hidden Markov Model and Dynamic Bayesian Network.
+### Define transition and observation models and explain their assumptions
+#### transition model
+![image](https://github.com/user-attachments/assets/3e71c6dd-3263-4fe1-a198-0f23868f8e2c)
+- **stav závisí jen na předchozím stavu**
+#### observation model
+![image](https://github.com/user-attachments/assets/46dfed73-dae4-4f42-b75e-adbb34c657da)
+- **pozorování závisí jen na akuálním stavu**
+### Define basic inference tasks and show how they are solved.
+#### filtering
+![image](https://github.com/user-attachments/assets/8e811c2e-355d-42a4-aef7-1962424a71c0)
+- je potřeba jít od začátku
+- ![image](https://github.com/user-attachments/assets/e6d9ffd2-db61-4477-9563-3c617668f92f)
+- ![image](https://github.com/user-attachments/assets/344365fc-8606-4199-8ed9-b9b709b56c20)
+- ![image](https://github.com/user-attachments/assets/a6c80f2f-97cc-4236-8ba3-05ca06d31266)
+
+#### prediction
+![image](https://github.com/user-attachments/assets/ce3e2b04-4d7c-4f3e-b984-ee4eeab460cf)
+- filering bez přidání nové evidence
+- ![image](https://github.com/user-attachments/assets/bbdc5c2e-f25d-4c0b-af65-dbd0f319b98f)
+
+#### smoothing
+![image](https://github.com/user-attachments/assets/8a17c07a-2d52-4119-879c-840795b8b1ba)
+![image](https://github.com/user-attachments/assets/b1603553-e73d-4cb6-8aa7-6ecce0b828d5)
+
+#### most likely explanation 
+![image](https://github.com/user-attachments/assets/0e3b63ed-5358-48d0-b857-bbdad8fcdf55)
+![image](https://github.com/user-attachments/assets/a5de903d-889b-4b4c-bee2-9358c2f20b8b)
+
+### Define and compare Hidden Markov Model and Dynamic Bayesian Network.
+#### hidden Markov model
+- stav je jedna proměnná $X_t$ a evidence jedna proměnná $E_t$
+- pak je všechno matice
+- **transition model**
+- ![image](https://github.com/user-attachments/assets/a3cfd9ec-3e4c-4df4-ae1b-3d4887f2b7ec)
+- **sensor model**
+- ![image](https://github.com/user-attachments/assets/f241fa9c-8f7c-4e6b-83d8-2cbc7680e6a4)
+![image](https://github.com/user-attachments/assets/1b6b8e8d-fc97-48c7-be77-4da8794a93f3)
+#### dynamic Bayesion network
+- kopie pro kazdy sttav
+![image](https://github.com/user-attachments/assets/19edd33a-2642-4890-b681-0102e437ca64)
+![image](https://github.com/user-attachments/assets/779a83a0-71c1-47ff-88cf-16191f74a198)
+- převod hmm na dbn
+- **je lepší** výrazně méně pravděpodobností
+- ![image](https://github.com/user-attachments/assets/965233cf-fe8b-447b-a150-b0dc047060e7)
 
 ## Decision making:
 - Formalize rationality via maximum expected utility principle (define expected
