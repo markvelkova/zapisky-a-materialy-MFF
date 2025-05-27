@@ -62,6 +62,7 @@
 <br>**uniform cost je dijkstra**<br>
 ### Informed (heuristic) search: explain evaluation function f and heuristic functionh, define admissible and monotonous heuristics and prove their relation.
 ![image](https://github.com/user-attachments/assets/8b30ca36-0fde-473e-b2e2-d737e26df4a5)
+- g je vzálenost od startu zjevně, tu totiž známe
 #### Přípustná heuristika (h(n))
 - heuristika mensi nebo rovna „ceny nejlevnější cesty z uzlu n do cíle“
 - optimistický pohled (algoritmus předpokládá lepší náklady, než jaké ve skutečnosti jsou)
@@ -81,6 +82,11 @@ $$
 $$
 h(n_1) \leq \sum_{i=1}^{k-1} c(n_i, a_i, n_{i+1}) \quad
 $$
+
+#### při monotónní heuristice hodnoty f(n) jsou neklesající po cestě
+Nechť $n'$ je následník $n$, tedy z $g(n') = g(n) + c(n,a,n')$, potom: <br>
+$f(n') = g(n') + h(n') = g(n) + c(n,a,n') + h(n') \leq g(n) + h(n) = f(n)$
+
 
 ### Describe A* algorithm and prove its properties (optimality for tree search and graph search).
 - dijkstra s heuristikou
