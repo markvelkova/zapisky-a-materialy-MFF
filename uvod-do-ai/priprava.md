@@ -380,7 +380,7 @@ return action
 - **plně pozorovatelné stochastické prostředí s Markovovým přechodovým modelem a odměnou**
 - $P(s'|s,a)$ pravděpodobnost, že mě akce přeese z s do s'
 - $R(s)$ odměna za stav
-- $U([s_0,s_1,s_2...]) = R(s_0) + \gamma R(s_1) + \gamma ^2 R(s_2)...
+- $U([s_0,s_1,s_2...]) = R(s_0) + \gamma R(s_1) + \gamma ^2 R(s_2)...$
 - $\gamma$ je diskontní faktor, vdálená budoucnost je nejistá a nezajímá nás tolik. Je tam taky proto, aby konvergovaly iteration algoritmy
 ##### its solution (policy)
 - funkce $\pi (s)$, která vrací akci pro každý stav
@@ -439,6 +439,8 @@ return action
 - dominantní ekvilibrium (přiznat PŘIZNAT!!!)
 - je paterodominované variantou  (ZATLOUKAT, ZATLOUKAT)
 #### define maximin technique
+- najdeme si pro kždou volbu nejhorší variantu, jak to může dopadnout a vybereme si opatrně
+- 
 
 #### show some strategies for repeated games
 - máme vězňovo dilema stokrát za sebou - pořád je racionální se přiznat
