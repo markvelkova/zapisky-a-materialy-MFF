@@ -238,15 +238,15 @@ return action
 ![image](https://github.com/user-attachments/assets/d9e75365-5631-4c73-9378-8a7d4a0f6ac6)
 #### marginalization
 - vysčítání přes elementární jevy
-![image](https://github.com/user-attachments/assets/50fe079a-c67c-4688-af27-e69bd26aa154)
+- ![image](https://github.com/user-attachments/assets/50fe079a-c67c-4688-af27-e69bd26aa154)
 #### normalization
 - máme evdence a počítáme pravděpodobnos jevu
-![image](https://github.com/user-attachments/assets/fde97654-75f7-438f-9f1b-fa10f54bd69f)
+- ![image](https://github.com/user-attachments/assets/fde97654-75f7-438f-9f1b-fa10f54bd69f)
 - kdž to spočítám pro všechny jevy, musí se to sečíst na jedničku
 ![image](https://github.com/user-attachments/assets/fe419baa-4f7d-4685-82a8-1a603c833960)
 - takže $P(E-e)$ nemusím počítat, hodím tam alfu
-![image](https://github.com/user-attachments/assets/178c36bf-5133-4ae8-8625-410d11da9a03)
-![image](https://github.com/user-attachments/assets/0927cbfe-c734-4277-90b6-b39a224c7c12)
+- ![image](https://github.com/user-attachments/assets/178c36bf-5133-4ae8-8625-410d11da9a03)
+- ![image](https://github.com/user-attachments/assets/0927cbfe-c734-4277-90b6-b39a224c7c12)
 #### causal direction vs diagnostic direction
 ![image](https://github.com/user-attachments/assets/7368094d-a228-4d6e-8c2a-8e0e9828e234)
 
@@ -258,20 +258,33 @@ return action
 - beru vrcholy a cokoli, co s nimi souvisí, do nich zapojím
 #### explain its relation to full joint probability distribution
 - reprezentuje ji
-- 
-![image](https://github.com/user-attachments/assets/54c41e18-cee6-40a5-9038-4f9b6730b6c5)
+- nemusíme uchovávat celou tu tabulku, protože všecho můžeem dopočítat
+- ![image](https://github.com/user-attachments/assets/54c41e18-cee6-40a5-9038-4f9b6730b6c5)
 #### explain chain rule
-![image](https://github.com/user-attachments/assets/b6704e93-6750-405f-9ab5-d261551a7ec6)
+- ![image](https://github.com/user-attachments/assets/b6704e93-6750-405f-9ab5-d261551a7ec6)
 ### describe inference techniques for Bayesian networks 
-- o je to s hidden proměnnýma
-![image](https://github.com/user-attachments/assets/da910934-79ca-404c-aa11-83f5124fa951)
-- $P(X,e,y)$:
-![image](https://github.com/user-attachments/assets/323e66d9-358d-4755-ae12-3096786a20d9)
-![image](https://github.com/user-attachments/assets/81a37805-448a-4eaf-bed8-3e060d31a196)
+- to je to s hidden proměnnýma
+- marginalizace
+- ![image](https://github.com/user-attachments/assets/e892fb89-8018-4081-95cb-6d8eb1b9efc6)
+- faktorizace
+- ![image](https://github.com/user-attachments/assets/323e66d9-358d-4755-ae12-3096786a20d9)
+- například vloupání za předpokladu, že volá Marry i John
+- na vloupání (b) a zemětřesení (e) závisí alarm (a)
+- na alarmu závisí, jestli volají John (j) a Mary (m)
+- hidden jsou alarm a zemětřeseni
+1. marginalizace přes $a$ a $e$
+- $P(b|j,m) = \alpha \sum_{e} \sum_{a} P(b,e,a,j,m)$
+2. faktorizace přes strukturu sítě
+-  pravidlo **$P(x_1,...,x_n) = \prod_{i}P(x_i | parents(X_i)$**
+- $P(b|j,m) = \alpha \sum_{e} \sum_{a} P(b) * P(e) * P(a|b,e) * P(j|a) * P(m|a)$
 #### enumeration
 - to o jeden nadpis výš, opakuje stejné části víckrát, není efektivní
 - když so to uložíme, máme dynamické programování
+- uděláme si faktory, což jsou matice popisující ty tabulky
+- postupně se vyplňují
 #### variable elimination
+- násobením faktorů získáme tabulku pro sjednocení
+- sčítáním můžeme eliminovat proměnnou
 ![image](https://github.com/user-attachments/assets/d5f1ceb5-aec0-42af-929c-4268042da7a4)
 #### rejection sampling
 - vyhodíme nekonzstentní s evidence
@@ -280,30 +293,47 @@ return action
 - výsledek má váhu podle pravděpodobnosti evidence vůči vzorku
 ![image](https://github.com/user-attachments/assets/71dd8bf7-cc77-47b9-a1be-074104f71e68)
 
-
 ## Probabilistic reasoning over time:
 ### Define transition and observation models and explain their assumptions
 #### transition model
 ![image](https://github.com/user-attachments/assets/3e71c6dd-3263-4fe1-a198-0f23868f8e2c)
-- **stav závisí jen na předchozím stavu**
+- **stav závisí jen na předchozím stavu** tedy $=P(X_t | X_{t-1}$
 #### observation model
 ![image](https://github.com/user-attachments/assets/46dfed73-dae4-4f42-b75e-adbb34c657da)
-- **pozorování závisí jen na akuálním stavu**
+- **pozorování závisí jen na akuálním stavu** tedy $=P(E_t | X_t)$
 ### Define basic inference tasks and show how they are solved.
 #### filtering
 ![image](https://github.com/user-attachments/assets/8e811c2e-355d-42a4-aef7-1962424a71c0)
 - je potřeba jít od začátku
-- ![image](https://github.com/user-attachments/assets/e6d9ffd2-db61-4477-9563-3c617668f92f)
-- ![image](https://github.com/user-attachments/assets/344365fc-8606-4199-8ed9-b9b709b56c20)
+- $P(X_{t+1}|e_{1:t+1}) = P(X_{t+1}|e_{1:t},e_{t+1})$
+> Bayes: $P(A|B,C) = (P(B|A,C)*P(A|C)) / P(B|C)$ <br>
+> ale jmenovatel se nám vleze do alfy, takže
+- $P(X_{t+1}|e_{1:t},e_{t+1}) = \alpha P(e_{t+1}|X_{t+1},e_{1:t})*P(X_{t+1}|e_{1:t})$
+> pozorování závisí jen na aktuálním stavu
+- $= \alpha P(e_{t+1}|X_{t+1})*P(X_{t+1}|e_{1:t})$
+> uděláme si vpravo sumu přes všechny možné stavy minulé
+- $= \alpha P(e_{t+1}|X_{t+1})*\sum_{x_t}P(X_{t+1}|x_t,e_{1:t})*P(x_t|e_{1:t})$
+> stav závisí jen na předchozím stavu
+- $= \alpha P(e_{t+1}|X_{t+1})*\sum_{x_t}P(X_{t+1}|x_t)*P(x_t|e_{1:t})$
+> $P(x_t|e_{1:t})$ rekurzivní část<br>
+> počítáme stejně, dokud nenarazíme na čas 0, kde jsou přímo hodntoy pravděpodobností pro výchozí stav
 - ![image](https://github.com/user-attachments/assets/a6c80f2f-97cc-4236-8ba3-05ca06d31266)
-
 #### prediction
 ![image](https://github.com/user-attachments/assets/ce3e2b04-4d7c-4f3e-b984-ee4eeab460cf)
-- filering bez přidání nové evidence
-- ![image](https://github.com/user-attachments/assets/bbdc5c2e-f25d-4c0b-af65-dbd0f319b98f)
-
+- filtering bez přidání nové evidence
+- $P(X_{t+k+1}|e_{1:t}) = \sum_{x_{t+k}}P(X_{t+k+1}|x_{t+k})P(x_{t+k}|e_{1:t})$
+- když půjdu pořád do budoucnosti, ustálí se to na nějaké standartní distribuci a zůstane konstantní
 #### smoothing
+- dopočítáváme nějaký okamžik minulosti, když víme evidence za celou dobu
+- vlastně filtering s evidencí navíc asi
 ![image](https://github.com/user-attachments/assets/8a17c07a-2d52-4119-879c-840795b8b1ba)
+- $P(X_k|e_{1:t}) = P(X_k|e_{1:k},e_{k+1:t})$
+> Bayes: $P(A|B,C) = (P(B|A,C)*P(A|C)) / P(B|C)$ <br>
+> ale jmenovatel se nám vleze do alfy, takže
+- $P(X_k|e_{1:k},e_{k+1:t}) = \alpha P(e_{k+1:t}|X_k,e_{1:k})*P(X_k|e_{1:k})$
+> z podmíněné nezávislosti můžeme $P(e_{k+1:t}|X_k,e_{1:k}) = P(e_{k+1:t}|X_k)$
+- $= \alpha P(e_{k+1:t}|X_k)*P(X_k|e_{1:k})$
+- $= \alpha f_{1:k} (filtering) x b_{k+1:t}
 ![image](https://github.com/user-attachments/assets/b1603553-e73d-4cb6-8aa7-6ecce0b828d5)
 
 #### most likely explanation 
