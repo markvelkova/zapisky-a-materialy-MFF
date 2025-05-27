@@ -45,7 +45,7 @@
 ![image](https://github.com/user-attachments/assets/4e0beddc-973d-42a6-b719-93b9dd1774b7)
 ### Explain and compare tree search and graph search, discuss memory vs time.
 #### tree search
-- když je fronta prázdná, vrátím false, jinak si vyberu vrchol, poud goal..., pokud ne, dám jeho syny do fronty
+- když je fronta prázdná, vrátím false, jinak si vyberu vrchol, pokud goal..., pokud ne, dám jeho syny do fronty
 - může prozkoumáva jeden stav víckrát, pokud do nj dojde různými cestami
 #### graph search
 - přidává syny do fronty jen poud nejsou v navštívených
@@ -54,7 +54,7 @@
 | **Vlastnost**                   | **Prohledávání do šířky (BFS)**                               | **Prohledávání do hloubky (DFS)**                                                                                       |
 |--------------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
 | **Pořadí rozšiřování uzlů**     | Nejmenší neprozkoumaná hloubka (FIFO)                         | Nejhlubší neprozkoumaný uzel (LIFO)                                                                                      |
-| **Úplnost**                     | Úplné (při konečném faktoru větvení)                          | Úplné pro prohledávání grafu<br>Neúplné pro prohledávání stromu                                                          |
+| **Úplnost**                     | **Úplné** (při konečném faktoru větvení)                          | **Úplné pro graph search**<br>**Neúplné pro tree search**                                                          |
 | **Optimálnost**                | Optimální (pokud cena cesty neklesá s hloubkou)                | Neoptimální (lze upravit na optimální pomocí „branch-and-bound“)                                                        |
 | **Časová složitost**           | $O(b^d)$, kde b je faktor větvení a d je hloubka cílového uzlu   | $O(b^m)$, kde m je maximální hloubka jakéhokoliv uzlu (m může být výrazně větší než d)                                     |
 | **Paměťová složitost**         | $O(b^d)$                                                        | $O(bm)$                                                                                                                 |
