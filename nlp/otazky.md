@@ -1,14 +1,53 @@
 # Evaluation measures in NLP.
 ## Give at least two examples of situations in which measuring a percentage accuracy is not adequate. (1 point)
+- translation - not exactly and only one slution correct
+- NER - kdyby bylo 90% univerzálních entit, dávalo by to všude univerzální popisek
 ## Explain: precision, recall (1 point)
+![image](https://github.com/user-attachments/assets/3bb3c04f-1ebe-4e89-bdc1-b67230a58fdd)
+
 ## What is F-measure, what is it useful for? (1 point)
+- weighted harmonic mean of P and R
+- ![image](https://github.com/user-attachments/assets/aab28e90-bc37-4ad7-919d-c64a47c0d9eb)
+- just harmonic mean
+- ![image](https://github.com/user-attachments/assets/6e32d19d-a31b-4949-96d8-461f58fa366e)
+- různý poměr váhy recall a recision
 ## What is k-fold cross-validation ? (1 point)
+- split dataset into k roughly equal parts (folds).
+1. For each fold $i=1,2,...,k$:
+2. Use fold $i$ as the test set.
+3. Use the remaining $k−1$ folds as the training set.
+4. Train the model on the training folds and evaluate on the test fold.
+- aggregate the performance metrics (accuracy, F1, etc.) across all $k$ runs by averaging
+- all data is used like testion and trainign
 ## Explain BLEU (the exact formula not needed, just the main principles). (1 point)
+- n-grams of words from 1-4 that are same with the reference transl.
+- celková chyba je z logaritmů poměru, co máme dobře
+- BP is brevity penalty - moc krátké věty
+- ![image](https://github.com/user-attachments/assets/fe7cbed2-2042-42f2-988a-99a918115235)
 ## Explain the purpose of brevity penalty in BLEU. (1 point)
+- u moc krátkých vět by se v precision blížil jmenovatel nule
 ## What is Labeled Attachment Score (in parsing)? (1 point)
+- ![image](https://github.com/user-attachments/assets/2a27bcb6-8628-44a1-8564-a1fcb6e86a7a)
+- head je, že se to vztahuje ke spravnemu rodici ve stromove struktuře, label je POS třeba
 ## What is Word Error Rate (in speech recognition)? (1 point)
+- ![image](https://github.com/user-attachments/assets/d2f58abc-3149-41b9-9f22-77ff99e38f5b)
+
 ## What is inter-annotator agreement? How can it be measured? (1 point)
+Example:
+- two annotators making classifications into two classes, A and B
+- 1st annotator: 80% A, 20% B
+- 2nd annotator 85% A, 15% B
+- probability of agreement by chance: 0.8*0.85 + 0.2*0.15 = 71%
+- desired measure: 1 if they agree in all decisions, 0 if their agreement is equal to agreement by chance
+
 ## What is Cohen's kappa? (1 point)
+- ![image](https://github.com/user-attachments/assets/a19735e8-9921-41bb-a862-4074367c3989)
+- measure of agreement
+- $P_e$ je agreement by chance, $P_a$ is relative observed agreement betwen two anotaors
+- scale from −1 to +1 (negative kappa unexpected but possible)
+- interpretation still unclear, but at least we abstracted from the by-chance agreement baseline
+- conventional interpretation: ..0.40-0.59 weak agreement, 0.60-79 moderate agreement, 0.80-0.90 strong agreements
+
 # Deep learning for NLP.
 ## Describe the two methods for training of the Word2Vec model. (1 point) 
 ### CBOW
