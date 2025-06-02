@@ -160,13 +160,89 @@ round)
 
 # Neural machine translation.
 ## Describe the critical limitation of PBMT that NMT solves. Provide example training data and example input where PBMT is very likely to introduce an error. (1 points)
+### Phrase-based MT:
+- is a log-linear model
+- **assumes phrases relatively independent** of each other
+- decomposes sentence into contiguous phrases
+- search has two parts:
+- training
+1. Align words.
+2. Extract (and score) phrases consistent with word alignment.
+3. Optimize weights (MERT).
+### critical limitation of phrase based MT
+- phrases ntot independent, "nemám" "žádného" splou souvisí
+- ![image](https://github.com/user-attachments/assets/e90ad431-b162-4a6c-999b-dae8c069ede3)
 ## Use formulas to highlight the similarity of NMT and LMs. (1 point)
+### language modelling
+![image](https://github.com/user-attachments/assets/618e3042-2146-4264-b2ab-7521dd7cda02)
+### nerual MT
+![image](https://github.com/user-attachments/assets/f9f94408-cd59-44dd-84cd-4da4a295a8e8)
+
 ## Describe, how words are fed to current NMT architectures and explain why is this beneficial over 1-hot representation. (1 point)
+### embeddings
+- maps word to a vector
+- dimension do not have clear interpretation
+- similar words close
+- Word2Vec
+### one-hot drawbacks 
+- huge sparse matrix
+- everything equally far
 ## Sketch the structure of an encoder-decoder architecture of neural MT, remember to describe the components in the picture (2 points)
+### encoder
+- ![image](https://github.com/user-attachments/assets/6978664c-8c75-42df-9187-35b7321dd35c)
+### decoder
+- ![image](https://github.com/user-attachments/assets/7e197932-2334-4417-a7c1-984621add42c)
+### en-dec
+- ![image](https://github.com/user-attachments/assets/b0e2aa9f-2637-4313-a7ae-073297fbb95e)
+- ![image](https://github.com/user-attachments/assets/e5653b54-27fc-4f5d-9a97-c8c6b69a6bc1)
+
 ## What is the difference in RNN decoder application at training time vs. at runtime? (1 point)
+### RNN - recurrent neural networks
+![image](https://github.com/user-attachments/assets/24546fdb-92e2-438b-be07-3ef84821f2a7)
+### difference
+- ![image](https://github.com/user-attachments/assets/121c7637-540d-4e6d-9b54-200f33b34611)
+- při tréninku používáme pravdu na výpočet chyby
+- při běhu už nevíme správná řešení
 ## What problem does attention in NMT address? Provide the key idea of the method. (1 point)
+- Arbitrary-length sentences fit badly into a fixed vector.
+- Reading input backward works better, because early words will be more salient.
+⇒ Use Bi-directional RNN and “attend” to all states $h_i$
+- ![image](https://github.com/user-attachments/assets/23fbe65f-2068-4058-aed7-e2169b2200fc)
+
 ## What problem/task do both RNN and self-attention resolve and what is the main benefit of self-attention over RNN? (1 point)
+- sequences of arbitrary length
+- SAN can acccess any position in constant time, paralelizable
+- RRN ong-range dependencies harder to capture and slower to compute.
 ## What are the three roles each state at a Transformer encoder layer takes in self-attention. (1 point)
+### Query (Q)
+– Asks: "What am I looking for?"
+### Key (K)
+– Answers: "What do I contain?"
+### Value (V)
+– Provides the actual information to be passed forward.
+### Mechanism
+- each token computes attention to all other tokens by comparing its query to their keys, and then aggregates their values accordingly:
 ## What are the three uses of self-attention in the Transformer model? (1 point)
+###  Encoder-Decoder Attention:
+- Q: previous decoder layers; K = V: outputs of encoder
+⇒ Decoder positions attend to all positions of the input.
+### Encoder Self-Attention:
+- Q = K = V: outputs of the previous layer of the encoder
+⇒ Encoder positions attend to all positions of previous layer.
+### Decoder Self-Attention:
+- Q = K = V: outputs of the previous decoder layer.
+- Masking used to prevent depending on future outputs.
+
 ## Provide an example of NMT improvement that was assumed to come from additional linguistic information but occurred also for a simpler reason. (1 point)
+- researchers added POS tags, it helped, but also did randomizing
 ## Summarize and compare the strategy of "classical statistical MT" vs. the strategy of neural approaches to MT. (1 point)
+| Aspect                 | **Classical SMT**                                      | **Neural MT (NMT)**                       |
+| ---------------------- | ------------------------------------------------------ | ----------------------------------------- |
+| **How**           | Modular: Translation model + Language model            | End-to-end neural model                   |
+| **Representations**     | Discrete symbols (words, phrases)                      | Continuous vectors (embeddings)           |
+| **how does it learn** | Maximizes $P(e \mid f)$ using hand-crafted components  | Learns to generate $P(e \mid f)$ jointly  |
+| **via what does it learn**           | Manually engineered (e.g., word alignment, distortion) | Automatically learned from data           |
+| **decoding**           | Phrase table + language model; heuristics              | Beam search over softmax outputs          |
+| **strengths**          | Transparent, interpretable, modular                    | Fluent, better generalization, contextual |
+| **weaknesses**         | Brittle, error-prone, poor generalization              | Needs lots of data, less interpretable    |
+
