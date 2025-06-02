@@ -81,12 +81,43 @@ round)
 - generative tasks
 # Machine translation fundamentals.
 ## Why is MT difficult from linguistic point of view? Provide examples and explanation for at least three different phenomena. (2 points)
+- Ambiguity and word senses- plant is next to the bank, ženu holí stroj, Spal celou Petkevičovu přednášku.
+- Target word forms - cases, genders - různé pády kočky jsou v angličtině stejné
+- Negation - ve francouzštině je okolo slova, v češtině může být vícenásobná a rušit se navzájem
+- Pronouns - english explicit, czcech slavný nevyjádřený podmět
+- Co-ordination and apposition; word order - Předseda vlády, Petr Nečas , a Martin Lhota přednesli příspěvky **přístavek**
+- Space of possible translations - je hrozná spousta validních překladů
+- idioms
 ## Why is MT difficult from computational point of view? (1 point)
 ## Briefly describe at least three methods of manual MT evaluation. (1-2 points)
+### ranking
+- sometimes hard to rank - everything equally poor
+### blind editing 
+- you dont see the source, but can correct the translation
+### judging
+- yes/no
+
 ## Describe BLEU. 1 point for the core properties explained, 1 point for the (commented) formula.
+- n-grams of words from 1-4 that are same with the reference transl.
+- celková chyba je z logaritmů poměru, co máme dobře
+- BP is brevity penalty - moc krátké věty
+- ![image](https://github.com/user-attachments/assets/fe7cbed2-2042-42f2-988a-99a918115235)
+
 ## Describe IBM Model 1 for word alignment, highlighting the EM structure of the algorithm. (1 point)
+- words are aligned one to one independently
+- learns the probabilities of $P(target| source)$
+### EM = expectaton maximzation
+- to stejný jako policy a value iteration v ai
+- určím si pravděpodobnosti, spočítám podle nich počty výskytů, minimalizuju rozdíl oproti skutečnosti
 ## Explain using equations the relation between Noisy channel model and log-linear model for classical statistical MT. (2 points)
+![image](https://github.com/user-attachments/assets/49ee643e-71d0-4bec-80fe-4b50a193b2df)
+- f je foreign, e je english
+- přistupujeme k překladu jako k dekodovani corrupted signalu
+- hledám v+tu, která maximalizuje tu pravděpodobnost, klidn+ je možný přeskošit odvození, říká to poslední řádek
 ## Describe the loop of weight optimization for the log-linear model as used in phrase-based MT. (1 point)
+![image](https://github.com/user-attachments/assets/0352d776-e019-40da-b4a3-325e9fc65442)
+- zase value/policy iteration
+- nastavám váhy, přeložím, porovnám, upravím váhy
 
 # Neural machine translation.
 ## Describe the critical limitation of PBMT that NMT solves. Provide example training data and example input where PBMT is very likely to introduce an error. (1 points)
