@@ -24,7 +24,16 @@ ne, procesor pracuje s adesami
 záleží, spíš ne
 
 ## můžu vidět instrukce?
-ano :¨), instrukce našeho programu jsou po kompilaci v tom `.o` souboru `objdump -d`
+ano :¨)
+```
+gcc -o main main.c
+objdump -d main
+
+nebo
+
+clang -o main main.c
+objdump -d main
+```
 
 ## user mode vs. privileged mode
 - když program chce dělat něco, co může interferovat s jinými programy, je to privileged
