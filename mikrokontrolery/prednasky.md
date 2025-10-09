@@ -109,3 +109,62 @@
 - **na začátku si musím zaktualiovat stack pointer** - pokud budu začínat na nule, podteču
 - je dobré nastavit si ho na velikost paměti
 - argumenty je lepšínedávat pes zásobník - není garantováno, v jakém pořadí se to tam dává, navíc registry jou rychlejší
+
+# INSTRUKCE
+- https://ww1.microchip.com/downloads/en/DeviceDoc/AVR-InstructionSet-Manual-DS40002198.pdf
+- jednoduché akce
+- přesně definované efekty
+- optimalizovný výběr instrukcí
+## na AVR
+### velikost
+- 1 nebo 2 slova (2 nebo 4 byty)
+- protože tam musíme narvat argumenty
+### cykly
+- 1 až 5 cyklů (argumenty, stack, atdatd)
+- `SPM` umí uložit celou stránku dat do paměti - hromada operací, trvá mega víc cyklů (stovky)
+
+## ADRESOVACÍ MÓDY
+### přímé
+- přímo registr(y)
+- nebo I/O
+- data memory, program memory
+- často to může být vyhodnoceno v jednom tiku
+### relativní
+- mám jen offset
+- malé jumpy
+### nepřímé
+- data uložená v paměti na adrese (data indirect)
+### nepřímé++
+- data indirect with displacement - typicky pole 
+  - nekde v pameti je delsi vec, v registru mam adresu na zacatek 
+- data indirect with pre-decrement / post-increment
+
+> přístup  do **program memory před registr Z**
+
+## operandy
+- najdu tabulku v prezentaci nebo instruction set manual
+  ![alt text](reg_operands_table.png)
+
+## DRUHY INSTRUKCÍ
+### ARITHMETIC AND LOGIC
+- `add`, `sub`... s nebo bez carry (`addc`. `subc`)
+- nasobeni, komplement, negace
+- `sbr`, `cbr` - set/clear bit in register
+- ...
+### DATA TRANSFER
+- load and store v rámci registrů a paměťmi
+- `push`, `pop`
+### BIT AND BIT TEST
+- clear/set carry
+- swap atd
+### BRANCH
+- compare and skip
+- if then 
+- `ret`, `call`, `jmp`
+- branch if minus (trva jeden cyklus, kdyz false, 2 kdyz true, protože musime skippnout prefetched instrukci a nacist jinou)
+### MCU control
+- `break`, `nop` - nedela nic jeden tik, `sleep`, `wdr`
+
+## ARITHMETICAL VS LOGICAL SHIFT RIGHT
+![arithmetic shift right](asr.png)
+![logical shift right](lsr.png)
