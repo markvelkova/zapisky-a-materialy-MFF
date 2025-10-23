@@ -11,7 +11,7 @@
 ![Compare Output Mode, Phase Correct, and Phase and Frequency Correct PWM](image-6.png)
 ### WGM1[1:0] bity
 - **společně s WGM1[3:2] v TCCR1B registru**
-- ovlivňují maximum counteru a typ waveform
+- ovlivňují maximum counteru a typ waveform<br>
 ![Waveform Generation Mode Bit Description](image-7.png)
 ![pokracovani](image-8.png)
 ### módy
@@ -40,7 +40,7 @@
 
 ### CS1[2:0]
 - clock select 1
-- ktery clock source se pouzije
+- ktery clock source se pouzije<br>
 ![Clock Select Bit Description](image-10.png)
 ![pokracovani](image-11.png)
 ## ICR1 registr

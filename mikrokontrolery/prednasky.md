@@ -243,17 +243,97 @@ nevime
 ## multiplex portů
 - mají zároveň ještě jiné funkce, někde jsou timery, sériové linky, A/D převodníky atd
 
+
+
 # dú
 - co se stane, kddyž budu číst z adresy úplně mimo
 - co když budu číst ze sedmibitoveho portu c?
 - co když z reserved
 - viz 35 register summary
-- najdi si rozdil mezi 328 a pb??? nevim, jedno je na arduino, druhé budeme používat my
+- najdi si rozdil mezi 328 a pb??? nevim, jedno je na arduino, druhé budeme používat my - třeba názvy timer1 compa vectoru
 
 > **v registru r1 si kompilátory c udržují 0**
 
 > já vám je rozdám, ale budu je chtít někdy zpátky. nepoužívejte je jako zarážku dveří
 
 > Co se stane, když budete pracovat s nedefinovanými hodnotami? Otevře se červí díra, vypukne krach na burze a umře koťátko
->
-> 
+
+
+# AVRAS2 assembler
+- syntax
+- preprocessor
+- klicova slova
+- operátory
+- direktiva
+- výrazy
+- funkce
+- issues
+## syntax
+- `[label:] instruction [operands] [Comment]`
+- label je jen adresa v programove pameti, kde ta funcke je
+- `[label:] directive [operands] [Comment]`
+- `Comment ; [text]`
+- `(empty line)`
+- **je preferované zarovnávat instrukce na 4 znaky**
+## preprocesor
+- skoro C
+- všechny direktiva začínají `#`
+- ještě existují dva operátory `#` a `##`
+- predefinovaná makra `__DEADBEEF__`
+### direktiva
+- `#define`
+- `#undef`
+- `#error`, `#warning`, `#message`
+- `#if`, `#else`, `#elif`, `#endif`
+- `#ifdef`, `#ifndef`
+- `#include`
+- `#pragma` - chceme rict neco jineho compileru
+- `#` - empty
+#### operátory
+- `#` - stringifikace
+- `##` - konkatenace
+#### `pragma`
+- overlap option - muze nas varovat nebo tak neco, kdyz se prekryvaji veci v pameti
+### operandy
+- label
+- variable - set directive
+- konstanty `equ`
+## assemler direktiva
+- začínají `.`
+- jsou case insensitive
+- `BYTE`
+- `CSEG`
+- `DEF`
+- `EQU`, `SET` (rozdil je, ze set muze byt overriden, equ ne)
+- `DEVICE`
+- `EXIT`
+- `IFDEF` atd atd
+- `INCLUDE`
+- `LIST` - produkuje log s instrukcemi se symbolickymi jmeny
+- `MACRO`, `ENDM`, `ENDMACRO`
+- `ORG` - pokud vektor, pak jen následující instrukce (typicky skok), jinak všechny další
+## makra
+- `__DATE__` atd
+## výrazy (expressions)
+- konstanty 
+  - interne 64bit
+  - operandy - labels, vars, constants; PC, int, float
+  - operatory
+  - funkce
+## funkce
+- `high` (vyssi byte), `low` (nizsi byte)
+- `byte2`, `byte3`, `byte4`
+- `lwrd`, `hwrd`
+- `page`
+- `exp2`, `log2`
+- `int`, `frac`
+- `ABS`, `DEFINED`
+- `STRLEN`
+## známá issues
+- makro musí být na jedné řádce, když ho voláme
+# interrupty
+- **vždy po návratu z interuptu se vykoná jedna instukce** až pak se může zase přerušovat
+
+# DÚ
+- 1Hz, ale bez timeru - musí to být milion clock cycles **assembler**
+- zkusit v **arduinu**
