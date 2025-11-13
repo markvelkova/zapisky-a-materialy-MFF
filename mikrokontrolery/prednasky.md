@@ -337,3 +337,66 @@ nevime
 # DÚ
 - 1Hz, ale bez timeru - musí to být milion clock cycles **assembler**
 - zkusit v **arduinu**
+
+# FUSES
+- tři registry (low, high, extended)
+- ovlivňují nastavení kontroleru samotného
+- clock selection - když tam nastavím external, můžu si to ovládat tlačítkem
+  
+# ASSEMBLER A C(++)
+- built in
+- avr gcc plugin - independentt source fils
+- avr gcc plugin - inline
+## avr studio gecc
+- gcc c asf board project (code examples, libraries)
+- gcc c executable project - compile + link
+- gcc c static library project = compile
+- gcc c++ exe
+- gcc c++ stat lib
+- from arduino sketch (mega nefunguje)
+
+### independent source files
+```
+.global main
+.extern
+```
+### inline assembler
+```
+asm volatile("cli"::);
+asm("in %0, %1" : "=r" (value) : "I" (_SFR_IO_ADDR(PORTD)) );
+// store portd value into a register
+```
+- https://www.nongnu.org/avr-libc/
+```
+asm(code : output_operand_list : input_operand_list [: clobber_list]);
+```
+- může obsahovat celý blok instrukcí, oddělené `\n`
+#### operand lists
+- constraint string
+  - `=` write only
+  - `+` read/write
+  - `&` output only
+- lvalue veci z C
+#### clobber_list
+- registry pouzivane v kodu, ale nejsou vystup ani vstup
+
+### asm / C koexistence
+- asm muze volat funkce v C a naopak
+> když můžu argument předat registrem a ne stackem, je to lepší
+#### z asm
+- `.extern my_C_function`, ale musíme správně pushnout na stack argumenty a připravit registry
+- `.global my_ASM_function` - připravím si ji na zavolání zvenku
+#### z C
+- `extern whatever my_asm_function(whatever)`
+
+## konvence volání funkcí
+- argumenty zleva doprava na r25-r8
+- zbytek na stacku, ale to by se nemelo stavat
+- **vsechny argumenty berou sudy pocet registru**
+### variable argument list
+- stack zprava doleva
+- prvni by mel definovat, co najdeme dal
+
+## jak C pouziva registry
+- **v r1 vždy 0**
+- 
