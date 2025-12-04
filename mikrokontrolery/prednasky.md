@@ -399,4 +399,39 @@ asm(code : output_operand_list : input_operand_list [: clobber_list]);
 
 ## jak C pouziva registry
 - **v r1 vždy 0**
-- 
+
+# jak se to tam bootloaderuje - AVR self programming
+- když není co programovat, pak skáče na $0000 jako by byl reset
+- když je - store program memory
+- nastoruje se od arsesy 0
+
+## `SPM`
+- instrukce, která se dá volat jen z bootloaderu
+- trvá dlouho, asi 4ms
+- víc v AVR109 application note
+
+> pojmenovat něco "fast" je stejně nešikovný, jako pojmenovat něco "moderní umění"
+
+# I2C
+- inter-integration circuit bus
+- pull-up
+- dva dráty - daa a hodiny
+- master/slave, ale může být i víc masterů
+- kdo začíná tikat hodinama, je master
+- **na Atmelu se to jmenuje TWI**
+- můžu mít až 2 na 3 epromek od stejného výrobce na jedné sběrnici třeba
+- když je tam napojeno hodně věcí, dělá to paralelní odpory a je těžší přitáhnout to na nulu (někdy může vlastnosti zlepšit)
+- vysílač nastavuje data, když jsou hodiny dole
+- přijímač čte, když jsou hodiny nahoře
+- start se může zopakovat pro změěnu r/w na sttené adrese
+## multimaster
+- stažení na nulu je silnější, než puštění, dokud to někdo drží, je to držené
+- vyhraje ten, kdo komunikuje s nižší adresou kvůli tomu
+- čte to, co píše, pokud pečte něco jiného, pestane se angažovat až do stop cond
+- na hodinách si taky může číst a počká si, až se to uvolní - **slave si může pozdržet hodiny**
+## adresování
+- 0000_000 - broadcast
+- 1111_xxx - 10 bitový prefix
+- **big endian**
+
+> jsem naučil svoji dceru, že 2*5 = A, než šla do školy... největší čočku jsem dostal teda od tchýně
